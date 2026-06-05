@@ -1,0 +1,15 @@
+export function WhatsAppFloat() {
+  return (
+    <a
+      href="https://wa.me/50600000000?text=Hola%2C%20quiero%20cotizar%20un%20proyecto%20con%20vork%20studio."
+      target="_blank"
+      rel="noreferrer"
+      aria-label="contactar por whatsapp"
+      className="fixed bottom-6 right-6 z-50 inline-flex h-12 w-12 items-center justify-center rounded-full bg-white/85 text-black shadow-2xl backdrop-blur-xl transition duration-300 hover:-translate-y-1"
+    >
+      <svg viewBox="0 0 32 32" className="h-5 w-5" aria-hidden="true">
+        <path fill="currentColor" d="M16.02 3.2A12.67 12.67 0 0 0 5.1 22.3L3.7 28.8l6.63-1.32A12.68 12.68 0 1 0 16.02 3.2Zm0 22.96c-1.94 0-3.74-.54-5.3-1.48l-.38-.23-3.93.78.83-3.84-.25-.4a10.3 10.3 0 1 1 9.03 5.17Zm5.65-7.72c-.31-.16-1.84-.91-2.13-1.01-.29-.11-.5-.16-.71.16-.21.31-.82 1.01-1.01 1.22-.18.21-.37.24-.68.08-.31-.16-1.31-.48-2.49-1.53-.92-.82-1.54-1.84-1.72-2.15-.18-.31-.02-.48.14-.64.14-.14.31-.37.47-.55.16-.18.21-.31.31-.52.11-.21.05-.39-.03-.55-.08-.16-.71-1.71-.97-2.34-.26-.62-.52-.53-.71-.54h-.6c-.21 0-.55.08-.84.39-.29.31-1.1 1.08-1.1 2.63s1.13 3.05 1.29 3.26c.16.21 2.23 3.41 5.4 4.78.76.33 1.35.52 1.81.67.76.24 1.45.21 2 .13.61-.09 1.84-.75 2.1-1.48.26-.73.26-1.35.18-1.48-.08-.13-.29-.21-.6-.37Z" />
+      </svg>
+    </a>
+  );
+}

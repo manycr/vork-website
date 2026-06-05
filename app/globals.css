@@ -1,0 +1,138 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --black: #101010;
+  --cream: #f4f0e8;
+  --accent: #f2db9c;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--cream);
+  color: var(--black);
+}
+
+input, select, textarea, button {
+  font: inherit;
+}
+
+.reveal {
+  animation: reveal 0.9s ease both;
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+.button {
+  display: inline-flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: #f2db9c;
+  padding: 0 22px;
+  font-weight: 900;
+  color: #101010;
+  transition: transform .2s ease;
+}
+
+.button:hover {
+  transform: translateY(-2px);
+}
+
+.button-secondary {
+  display: inline-flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+  padding: 0 22px;
+  font-weight: 900;
+  color: #101010;
+  transition: transform .2s ease;
+}
+
+.button-secondary:hover {
+  transform: translateY(-2px);
+}
+
+.field {
+  min-height: 56px;
+  width: 100%;
+  border-radius: 18px;
+  border: 1px solid rgba(0,0,0,.08);
+  background: rgba(255,255,255,.72);
+  padding: 0 18px;
+  color: #101010;
+  outline: none;
+}
+
+.dark-field {
+  width: 100%;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.06);
+  padding: 18px;
+  color: white;
+  outline: none;
+}
+
+.dark-field option {
+  color: #101010;
+}
+
+
+body {
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+  letter-spacing: -0.01em;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+a {
+  text-decoration: none;
+}
+
+.button-secondary {
+  background-color: rgba(255,255,255,0.04);
+}
+
+.field {
+  font-size: 0.95rem;
+}
+
+
+@media (max-width: 900px) {
+  h1, h2 {
+    letter-spacing: -0.055em;
+  }
+}
+
+@media (max-width: 640px) {
+  .field {
+    min-height: 54px;
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+}
+
+.button-secondary {
+  border-color: rgba(255,255,255,.38);
+}
