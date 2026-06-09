@@ -10,7 +10,7 @@ export default async function StudioPage() {
       <Header />
       <section className="px-[7vw] pb-24 pt-36">
         <a href="/" className="mb-12 inline-flex text-sm font-black lowercase text-neutral-500">← volver</a>
-        <p className="mb-5 text-xs font-black uppercase tracking-[0.24em] text-[#7a7468]">vork studio</p>
+        <p className="mb-5 text-xs font-black lowercase tracking-[0.08em] text-[#7a7468]">vork studio</p>
         <h1 className="max-w-5xl text-6xl font-black lowercase leading-[0.88] tracking-[-0.075em] md:text-9xl">proyectos y visualización.</h1>
       </section>
       <section className="px-[7vw] pb-32">

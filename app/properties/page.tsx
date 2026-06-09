@@ -5,7 +5,7 @@ export default function ComingSoon() {
       <Header />
       <section className="flex min-h-screen items-center px-[7vw]">
         <div className="max-w-5xl">
-          <p className="mb-6 text-xs font-black uppercase tracking-[0.24em] text-white/45">próximamente</p>
+          <p className="mb-6 text-xs font-black lowercase tracking-[0.24em] text-white/45">próximamente</p>
           <h1 className="text-6xl font-black lowercase leading-[0.88] tracking-[-0.075em] md:text-9xl">vork properties.</h1>
           <p className="mt-8 max-w-2xl text-lg text-white/58">inmobiliaria boutique de bienes raíces con criterio arquitectónico. en construcción.</p>
           <a href="/" className="button-light mt-10">volver a vork studio</a>
