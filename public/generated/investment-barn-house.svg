@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 860 700">
+<rect width="860" height="700" fill="#f4f0e8"/><circle cx="690" cy="120" r="240" fill="#d7caa8" opacity=".18"/><circle cx="130" cy="640" r="260" fill="#d7caa8" opacity=".12"/>
+<g opacity=".10"><path d="M0 120 H860 M0 240 H860 M0 360 H860 M0 480 H860 M0 600 H860" stroke="#101010"/><path d="M120 0 V700 M240 0 V700 M360 0 V700 M480 0 V700 M600 0 V700 M720 0 V700" stroke="#101010"/></g>
+<g><path d="M220 610 L220 360 L430 210 L640 360 L640 610 Z" fill="none" stroke="#101010" stroke-width="3"/><path d="M280 610 L280 395 L430 290 L580 395 L580 610" fill="none" stroke="#101010" stroke-width="1.5" opacity=".55"/></g>
+<text x="70" y="90" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="700" fill="#101010" letter-spacing="-1">barn house retreat</text>
+<text x="70" y="125" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#101010" opacity=".55" letter-spacing="3">hospitality · modular villas</text>
+<text x="70" y="640" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#101010" opacity=".45" letter-spacing="5">vork</text>
+</svg>

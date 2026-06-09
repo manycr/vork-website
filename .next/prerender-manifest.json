@@ -1,1 +1,11 @@
-{"version":4,"routes":{"/projects/casa-atria":{},"/projects/interior-norte":{},"/projects/villas-pacifico":{}},"dynamicRoutes":{"/projects/[slug]":{"dataRoute":null,"dataRouteRegex":null,"fallback":null,"fallbackRevalidate":false,"fallbackSourceRoute":"/projects/[slug]","routeRegex":"^\\/projects\\/([^/]+?)(?:\\/)?$","allowHeader":[]}},"notFoundRoutes":[],"preview":{"previewModeId":"c037c383927b19d7a0e8cf73bbeb0353","previewModeSigningKey":"8e58a0a1ea3ba974d306926d9e2aae7e884a3104a568abe32f30f8aa91bfcca1","previewModeEncryptionKey":"313ae05d27dd6e7547b7393ecff87b9673ed40441abe6072474a491f2ff959f1"}}
+{
+  "version": 4,
+  "routes": {},
+  "dynamicRoutes": {},
+  "notFoundRoutes": [],
+  "preview": {
+    "previewModeId": "f578af2c059d7a5fcebe4b9fc0abc71a",
+    "previewModeSigningKey": "82128cd1666afe435ed1d4408ee0eda92e7f9e36e8d4a3f20bb0476a52e5f53b",
+    "previewModeEncryptionKey": "5ccbd0a14d87ec7a1c11bc9a409d0000b5fd012bc408f683769acdb9ca249938"
+  }
+}

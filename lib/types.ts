@@ -1,3 +1,28 @@
+export type ContentType = "project" | "investment" | "property" | "visual";
+
+export type CMSItem = {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  type: ContentType;
+  title: string;
+  slug: string;
+  status: "draft" | "published";
+  category?: string | null;
+  location?: string | null;
+  year?: string | null;
+  area?: string | null;
+  services?: string[] | null;
+  summary?: string | null;
+  description?: string | null;
+  concept?: string | null;
+  investment_thesis?: string | null;
+  price?: string | null;
+  featured: boolean;
+  cover_image?: string | null;
+  gallery?: string[] | null;
+};
+
 export type EstimatorPayload = {
   projectType: string;
   zone: string;
@@ -19,13 +44,9 @@ export type AIReport = {
   leadScore: number;
   investmentRange: string;
   estimatedTime: string;
-
-  // Cliente: solo lectura comercial controlada.
   clientSummary: string;
   clientMessage: string;
   visibleNextStep: string;
-
-  // VORK: análisis interno.
   internalSummary: string;
   internalRisks: string[];
   internalRecommendations: string[];
