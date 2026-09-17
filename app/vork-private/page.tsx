@@ -727,6 +727,43 @@ async function uploadImage(file: File) {
       className="h-36 w-full rounded-2xl object-cover"
     />
 
+    <div className="absolute bottom-2 right-2 flex gap-1">
+  <button
+    type="button"
+    disabled={index === 0}
+    onClick={() => {
+      const images = projectForm.gallery.split("\n").filter(Boolean);
+      [images[index - 1], images[index]] = [images[index], images[index - 1]];
+
+      setProjectForm({
+        ...projectForm,
+        gallery: images.join("\n"),
+      });
+    }}
+    className="flex h-8 w-8 items-center justify-center rounded-full bg-black text-white disabled:opacity-30"
+  >
+    ←
+  </button>
+
+  <button
+    type="button"
+    disabled={
+      index === projectForm.gallery.split("\n").filter(Boolean).length - 1
+    }
+    onClick={() => {
+      const images = projectForm.gallery.split("\n").filter(Boolean);
+      [images[index], images[index + 1]] = [images[index + 1], images[index]];
+
+      setProjectForm({
+        ...projectForm,
+        gallery: images.join("\n"),
+      });
+    }}
+    className="flex h-8 w-8 items-center justify-center rounded-full bg-black text-white disabled:opacity-30"
+  >
+    →
+  </button>
+</div>
     <button
       type="button"
       onClick={() => {
