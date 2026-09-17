@@ -455,7 +455,12 @@ async function uploadImage(file: File) {
         cerrar ×
       </button>
     </div>
-    <div className="mt-8 grid gap-5 md:grid-cols-2">
+    <div className="mt-8 border-t border-black/10 pt-6">
+  <p className="text-xs font-bold lowercase tracking-[0.08em] text-black/35">
+    información básica
+  </p>
+</div>
+<div className="mt-5 grid gap-5 md:grid-cols-2">
   <div className="md:col-span-2">
     <label className="mb-2 block text-xs font-bold lowercase text-black/45">
       nombre del proyecto
@@ -545,6 +550,11 @@ async function uploadImage(file: File) {
   />
 </div>
 
+<div className="md:col-span-2 mt-4 border-t border-black/10 pt-6">
+  <p className="text-xs font-bold lowercase tracking-[0.08em] text-black/35">
+    descripción del proyecto
+  </p>
+</div>
 <div className="md:col-span-2">
   <label className="mb-2 block text-xs font-bold lowercase text-black/45">
     resumen
