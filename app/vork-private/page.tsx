@@ -105,7 +105,29 @@ async function loadItems() {
   }
 }
 
-async function saveProject() {
+async function uploadImage(file: File) {
+  const savedPassword =
+    password || sessionStorage.getItem("vork-dashboard-password") || "";
+
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const response = await fetch("/api/dashboard/upload", {
+    method: "POST",
+    headers: {
+      "x-dashboard-password": savedPassword,
+    },
+    body: formData,
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.error || "no se pudo subir la imagen");
+  }
+
+  return data.url;
+}async function saveProject() {
   const savedPassword =
     password || sessionStorage.getItem("vork-dashboard-password") || "";
 
@@ -604,7 +626,130 @@ async function saveProject() {
     </span>
   </label>
 </div>
-</div><div className="md:col-span-2 flex justify-end pt-4">
+</div><div className="md:col-span-2">
+  <label className="mb-2 block text-xs font-bold lowercase">
+    imagen de portada
+  </label>
+
+  <input
+    type="file"
+    accept="image/*"
+    onChange={async (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+
+      try {
+        const url = await uploadImage(file);
+
+        setProjectForm({
+          ...projectForm,
+          cover_image: url,
+        });
+      } catch {
+        setItemsError("no se pudo subir la imagen");
+      }
+    }}
+    className="w-full rounded-2xl border border-black/10 bg-white px-4 py-3 text-sm"
+  />
+
+  {projectForm.cover_image && (
+  <div className="relative mt-4">
+    <img
+      src={projectForm.cover_image}
+      alt="portada del proyecto"
+      className="h-48 w-full rounded-2xl object-cover"
+    />
+
+    <button
+      type="button"
+      onClick={() =>
+        setProjectForm({
+          ...projectForm,
+          cover_image: "",
+        })
+      }
+      className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-black text-lg text-white"
+      aria-label="eliminar imagen de portada"
+    >
+      ×
+    </button>
+  </div>
+)}
+<div className="md:col-span-2">
+  <label className="mb-2 block text-xs font-bold lowercase">
+    galería del proyecto
+  </label>
+
+  <input
+    type="file"
+    accept="image/*"
+    multiple
+    onChange={async (e) => {
+      const files = Array.from(e.target.files || []);
+      if (!files.length) return;
+
+      try {
+        const urls = [];
+
+        for (const file of files) {
+          const url = await uploadImage(file);
+          urls.push(url);
+        }
+
+        const currentGallery = projectForm.gallery
+          ? projectForm.gallery.split("\n").filter(Boolean)
+          : [];
+
+        setProjectForm({
+          ...projectForm,
+          gallery: [...currentGallery, ...urls].join("\n"),
+        });
+      } catch {
+        setItemsError("no se pudieron subir las imágenes");
+      }
+    }}
+    className="w-full rounded-2xl border border-black/10 bg-white px-4 py-3 text-sm"
+  />
+
+  {projectForm.gallery && (
+    <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3">
+      {projectForm.gallery
+        .split("\n")
+        .filter(Boolean)
+        .map((image, index) => (
+  <div
+    key={`${image}-${index}`}
+    className="relative"
+  >
+    <img
+      src={image}
+      alt={`imagen ${index + 1} del proyecto`}
+      className="h-36 w-full rounded-2xl object-cover"
+    />
+
+    <button
+      type="button"
+      onClick={() => {
+        const images = projectForm.gallery
+          .split("\n")
+          .filter(Boolean)
+          .filter((_, i) => i !== index);
+
+        setProjectForm({
+          ...projectForm,
+          gallery: images.join("\n"),
+        });
+      }}
+      className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-black text-lg text-white"
+      aria-label="eliminar imagen"
+    >
+      ×
+    </button>
+  </div>
+))}
+    </div>
+  )}
+</div></div><div className="md:col-span-2 flex justify-end pt-4">
   <button
     type="button"
     onClick={saveProject}
