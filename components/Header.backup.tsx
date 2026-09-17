@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 export function Header(){
  const[scrolled,setScrolled]=useState(false);
  useEffect(()=>{const update=()=>setScrolled(window.scrollY>window.innerHeight*.72);update();window.addEventListener("scroll",update,{passive:true});return()=>window.removeEventListener("scroll",update)},[]);
- return <header className={`fixed inset-x-0 top-0 z-50 grid h-16 grid-cols-[auto_1fr_auto] items-center px-[7vw] transition-all duration-500 ${scrolled ? "h-14 bg-[#f4f0e8]/90 text-[#101010] shadow-[0_1px_0_rgba(0,0,0,0.06)] backdrop-blur-xl" : "bg-gradient-to-b from-black/35 via-black/10 to-transparent text-white"}`}>
+ return <header className={`fixed inset-x-0 top-0 z-50 grid h-16 grid-cols-[auto_1fr_auto] items-center px-[7vw] transition-all duration-500 ${scrolled?"h-14 bg-[#f4f0e8]/78 text-[#101010] backdrop-blur-xl":"text-white"}`}>
   <a href="/" className="tracking-tight"><span className="text-xl font-black lowercase">vork</span><span className="text-sm font-light lowercase">studio</span></a>
   <nav className="hidden justify-center gap-8 text-[0.74rem] font-semibold lowercase tracking-[-0.01em] md:flex">
   <a href="/studio">studio</a>
