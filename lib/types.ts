@@ -1,4 +1,4 @@
-export type ContentType = "project" | "investment" | "property" | "visual";
+export type ContentType = "project" | "investment" | "property" | "visual" | "construction";
 
 export type CMSItem = {
   id: string;
