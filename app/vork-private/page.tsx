@@ -73,7 +73,61 @@ const [projectForm, setProjectForm] = useState({
   cover_image: "",
   gallery: "",
 });
+const [showVisualForm, setShowVisualForm] = useState(false);
 
+const [visualForm, setVisualForm] = useState({
+  title: "",
+  category: "",
+  summary: "",
+  cover_image: "",
+  status: "draft",
+  featured: false,
+});async function saveVisual() {
+  const savedPassword =
+    password || sessionStorage.getItem("vork-dashboard-password") || "";
+
+  if (!visualForm.title.trim()) {
+    setItemsError("escribe el nombre de la visualización");
+    return;
+  }
+
+  setItemsError("");
+
+  try {
+    const response = await fetch("/api/dashboard/items", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-dashboard-password": savedPassword,
+      },
+      body: JSON.stringify({
+        type: "visual",
+        ...visualForm,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      setItemsError(data.error || "no se pudo guardar la visualización");
+      return;
+    }
+
+    setVisualForm({
+      title: "",
+      category: "",
+      summary: "",
+      cover_image: "",
+      status: "draft",
+      featured: false,
+    });
+
+    setShowVisualForm(false);
+    await loadItems();
+  } catch {
+    setItemsError("no se pudo conectar con el servidor");
+  }
+}
 async function loadItems() {
   const savedPassword =
     password || sessionStorage.getItem("vork-dashboard-password") || "";
@@ -875,6 +929,180 @@ async function uploadImage(file: File) {
         <div className="rounded-3xl border border-black/10 bg-white/50 p-8">
           <p className="text-sm text-black/45">
             todavía no hay proyectos.
+          </p>
+        </div>
+      )}
+  </div>
+)}{activeSection === "visualizaciones" && (
+  <div>
+    <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <p className="text-xs font-bold lowercase tracking-[0.08em] text-black/35">
+          vork studio
+        </p>
+
+        <h2 className="mt-2 text-3xl font-black lowercase tracking-[-0.05em]">
+          visualizaciones
+        </h2>
+
+        <p className="mt-2 text-sm text-black/45">
+          {items.filter((item) => item.type === "visual").length} visualizaciones
+        </p>
+      </div>
+
+      <button
+        type="button"
+        onClick={() => setShowVisualForm(true)}
+        className="rounded-full bg-black px-5 py-3 text-xs font-bold lowercase text-white"
+      >
+        + nueva visualización
+      </button>
+      {showVisualForm && (
+  <div className="mt-6 rounded-3xl border border-black/10 bg-white p-6 md:p-8">
+    <div className="flex items-start justify-between gap-6">
+      <div>
+        <p className="text-xs font-bold lowercase tracking-[0.08em] text-black/35">
+          vork studio
+        </p>
+        <h3 className="mt-2 text-3xl font-black lowercase tracking-[-0.05em]">
+          nueva visualización
+        </h3>
+      </div>
+
+      <button
+        type="button"
+        onClick={() => setShowVisualForm(false)}
+        className="text-xs font-bold lowercase text-black/50 hover:text-black"
+      >
+        cerrar ×
+      </button>
+    </div>
+
+    <div className="mt-8 grid gap-5 md:grid-cols-2">
+      <div className="md:col-span-2">
+        <label className="mb-2 block text-xs font-bold lowercase text-black/45">
+          nombre
+        </label>
+        <input
+          type="text"
+          value={visualForm.title}
+          onChange={(e) =>
+            setVisualForm({ ...visualForm, title: e.target.value })
+          }
+          placeholder="ej. atmósfera interior"
+          className="w-full rounded-2xl border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:border-black/30"
+        />
+      </div>
+
+      <div>
+        <label className="mb-2 block text-xs font-bold lowercase text-black/45">
+          categoría
+        </label>
+        <input
+          type="text"
+          value={visualForm.category}
+          onChange={(e) =>
+            setVisualForm({ ...visualForm, category: e.target.value })
+          }
+          placeholder="ej. render interior"
+          className="w-full rounded-2xl border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:border-black/30"
+        />
+      </div>
+
+      <div>
+        <label className="mb-2 block text-xs font-bold lowercase text-black/45">
+          imagen
+        </label>
+        <input
+          type="text"
+          value={visualForm.cover_image}
+          onChange={(e) =>
+            setVisualForm({ ...visualForm, cover_image: e.target.value })
+          }
+          placeholder="url de la imagen"
+          className="w-full rounded-2xl border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:border-black/30"
+        />
+      </div>
+
+      <div className="md:col-span-2">
+        <label className="mb-2 block text-xs font-bold lowercase text-black/45">
+          descripción
+        </label>
+        <textarea
+          value={visualForm.summary}
+          onChange={(e) =>
+            setVisualForm({ ...visualForm, summary: e.target.value })
+          }
+          placeholder="breve descripción de la visualización"
+          rows={4}
+          className="w-full rounded-2xl border border-black/10 bg-white px-4 py-3 text-sm outline-none focus:border-black/30"
+        />
+      </div>
+    </div>
+<div className="md:col-span-2">
+  <label className="mb-2 block text-xs font-bold lowercase text-black/45">
+    estado
+  </label>
+
+  <select
+    value={visualForm.status}
+    onChange={(e) =>
+      setVisualForm({ ...visualForm, status: e.target.value })
+    }
+    className="w-full rounded-2xl border border-black/10 bg-white px-4 py-3 text-sm"
+  >
+    <option value="draft">borrador</option>
+    <option value="published">publicado</option>
+  </select>
+</div>
+
+<div className="mt-6 flex justify-end">
+  <button
+    type="button"
+    onClick={saveVisual}
+    className="rounded-full bg-black px-6 py-3 text-xs font-bold lowercase text-white"
+  >
+    guardar visualización
+  </button>
+</div>
+  </div>
+)}
+    </div>
+
+    <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+      {items
+        .filter((item) => item.type === "visual")
+        .map((item) => (
+          <div
+            key={item.id}
+            className="overflow-hidden rounded-3xl border border-black/10 bg-white"
+          >
+            {item.cover_image && (
+              <div
+                className="aspect-square w-full bg-cover bg-center"
+                style={{ backgroundImage: `url('${item.cover_image}')` }}
+              />
+            )}
+
+            <div className="p-5">
+              <p className="text-xs font-bold lowercase tracking-[0.08em] text-black/35">
+                {item.category || "visualización"}
+              </p>
+
+              <h3 className="mt-2 text-xl font-black lowercase">
+                {item.title}
+              </h3>
+            </div>
+          </div>
+        ))}
+    </div>
+
+    {!loadingItems &&
+      !itemsError &&
+      items.filter((item) => item.type === "visual").length === 0 && (
+        <div className="rounded-3xl border border-black/10 bg-white/50 p-8">
+          <p className="text-sm text-black/45">
+            todavía no hay visualizaciones.
           </p>
         </div>
       )}
