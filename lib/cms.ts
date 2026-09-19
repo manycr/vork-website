@@ -10,21 +10,33 @@ function filterFallback(type?: ContentType, featured?: boolean) {
   });
 }
 
-export async function getPublishedItems(type?: ContentType, featured?: boolean) {
+export async function getPublishedItems(
+  type?: ContentType,
+  featured?: boolean
+) {
   try {
     const supabase = getSupabaseAdmin();
+
     let query = supabase
       .from("cms_items")
       .select("*")
       .eq("status", "published")
       .order("created_at", { ascending: false });
 
-    if (type) query = query.eq("type", type);
-    if (featured !== undefined) query = query.eq("featured", featured);
+    if (type) {
+      query = query.eq("type", type);
+    }
+
+    if (featured !== undefined) {
+      query = query.eq("featured", featured);
+    }
 
     const { data, error } = await query;
 
-    if (error || !data || data.length === 0) return filterFallback(type, featured);
+    if (error || !data || data.length === 0) {
+      return filterFallback(type, featured);
+    }
+
     return data as CMSItem[];
   } catch {
     return filterFallback(type, featured);
@@ -34,6 +46,7 @@ export async function getPublishedItems(type?: ContentType, featured?: boolean) 
 export async function getItemBySlug(slug: string) {
   try {
     const supabase = getSupabaseAdmin();
+
     const { data, error } = await supabase
       .from("cms_items")
       .select("*")
@@ -41,9 +54,36 @@ export async function getItemBySlug(slug: string) {
       .eq("status", "published")
       .single();
 
-    if (error || !data) return fallbackItems.find((item) => item.slug === slug) || null;
+    if (error || !data) {
+      return fallbackItems.find((item) => item.slug === slug) || null;
+    }
+
     return data as CMSItem;
   } catch {
     return fallbackItems.find((item) => item.slug === slug) || null;
+  }
+}
+
+export async function getSiteContent(
+  page: string,
+  section: string
+): Promise<Record<string, string>> {
+  try {
+    const supabase = getSupabaseAdmin();
+
+    const { data, error } = await supabase
+      .from("site_content")
+      .select("content")
+      .eq("page", page)
+      .eq("section", section)
+      .single();
+
+    if (error || !data?.content) {
+      return {};
+    }
+
+    return data.content as Record<string, string>;
+  } catch {
+    return {};
   }
 }

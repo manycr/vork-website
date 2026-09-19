@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { ReactNode } from "react";
 
 type Section =
   | "inicio"
+  | "contenido"
   | "proyectos"
   | "visualizaciones"
   | "inversiones"
@@ -16,6 +18,11 @@ const sections: { id: Section; label: string; description: string }[] = [
     id: "inicio",
     label: "inicio",
     description: "resumen general",
+  },
+  {
+    id: "contenido",
+    label: "contenido web",
+    description: "textos e imagen principal",
   },
   {
     id: "proyectos",
@@ -49,10 +56,157 @@ const sections: { id: Section; label: string; description: string }[] = [
   },
 ];
 
+
+function ContentEditorSection({
+  number,
+  title,
+  description,
+  children,
+}: {
+  number: string;
+  title: string;
+  description: string;
+  children: ReactNode;
+}) {
+  return (
+    <section className="overflow-hidden rounded-[28px] border border-black/10 bg-white">
+      <div className="grid gap-4 border-b border-black/10 bg-[#fafafa] px-6 py-6 md:grid-cols-[70px_1fr] md:px-8">
+        <span className="text-xs font-black tracking-[0.08em] text-black/25">{number}</span>
+        <div>
+          <h3 className="text-2xl font-black lowercase tracking-[-0.045em]">{title}</h3>
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-black/45">{description}</p>
+        </div>
+      </div>
+      <div className="space-y-7 p-6 md:p-8">{children}</div>
+    </section>
+  );
+}
+
+function CmsTextField({
+  label,
+  value,
+  onChange,
+  multiline = false,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  multiline?: boolean;
+}) {
+  return (
+    <div>
+      <label className="mb-2 block text-xs font-bold lowercase text-black/45">{label}</label>
+      {multiline ? (
+        <textarea
+          rows={4}
+          value={value || ""}
+          onChange={(event) => onChange(event.target.value)}
+          className="w-full resize-none rounded-2xl border border-black/10 bg-white px-4 py-3 text-sm leading-6 outline-none transition focus:border-black/35"
+        />
+      ) : (
+        <input
+          type="text"
+          value={value || ""}
+          onChange={(event) => onChange(event.target.value)}
+          className="w-full rounded-2xl border border-black/10 bg-white px-4 py-3 text-sm outline-none transition focus:border-black/35"
+        />
+      )}
+    </div>
+  );
+}
+
+function CmsSizeControl({
+  label,
+  desktop,
+  mobile,
+  onDesktop,
+  onMobile,
+}: {
+  label: string;
+  desktop: string;
+  mobile: string;
+  onDesktop: (value: string) => void;
+  onMobile: (value: string) => void;
+}) {
+  return (
+    <div className="rounded-2xl border border-black/10 bg-[#fafafa] p-4">
+      <p className="text-xs font-bold lowercase text-black/45">{label}</p>
+      <div className="mt-4 grid grid-cols-2 gap-3">
+        <label className="block">
+          <span className="mb-2 block text-[11px] font-bold lowercase text-black/35">desktop · px</span>
+          <input type="number" min="10" max="180" value={desktop || ""} onChange={(e) => onDesktop(e.target.value)} className="w-full rounded-xl border border-black/10 bg-white px-3 py-2.5 text-sm outline-none focus:border-black/35" />
+        </label>
+        <label className="block">
+          <span className="mb-2 block text-[11px] font-bold lowercase text-black/35">móvil · px</span>
+          <input type="number" min="10" max="120" value={mobile || ""} onChange={(e) => onMobile(e.target.value)} className="w-full rounded-xl border border-black/10 bg-white px-3 py-2.5 text-sm outline-none focus:border-black/35" />
+        </label>
+      </div>
+    </div>
+  );
+}
+
+function CmsTypographyField({
+  label,
+  value,
+  onChange,
+  desktop,
+  mobile,
+  onDesktop,
+  onMobile,
+  multiline = false,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  desktop: string;
+  mobile: string;
+  onDesktop: (value: string) => void;
+  onMobile: (value: string) => void;
+  multiline?: boolean;
+}) {
+  return (
+    <div className="grid gap-4 lg:grid-cols-[1fr_300px]">
+      <CmsTextField label={label} value={value} onChange={onChange} multiline={multiline} />
+      <CmsSizeControl label="tamaño de letra" desktop={desktop} mobile={mobile} onDesktop={onDesktop} onMobile={onMobile} />
+    </div>
+  );
+}
+
+function CmsImageField({
+  label,
+  value,
+  onUpload,
+  onRemove,
+}: {
+  label: string;
+  value: string;
+  onUpload: (file: File) => Promise<void>;
+  onRemove: () => void;
+}) {
+  return (
+    <div className="overflow-hidden rounded-2xl border border-black/10 bg-[#fafafa]">
+      {value ? (
+        <div className="relative">
+          <img src={value} alt={label} className="aspect-[16/9] w-full object-cover" />
+          <button type="button" onClick={onRemove} className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-black text-white transition hover:bg-[#333]">×</button>
+        </div>
+      ) : (
+        <div className="flex aspect-[16/9] items-center justify-center text-xs font-bold lowercase text-black/25">sin imagen</div>
+      )}
+      <div className="p-4">
+        <p className="mb-3 text-xs font-bold lowercase text-black/45">{label}</p>
+        <input type="file" accept="image/*" onChange={async (e) => { const file = e.target.files?.[0]; if (file) await onUpload(file); }} className="w-full text-xs" />
+      </div>
+    </div>
+  );
+}
+
 export default function Dashboard() {
   const [activeSection, setActiveSection] = useState<Section>("inicio");
   const [password, setPassword] = useState("");
   const [authenticated, setAuthenticated] = useState(false);
+  const [loginError, setLoginError] = useState("");
+  const [loginLoading, setLoginLoading] = useState(false);
   const [items, setItems] = useState<any[]>([]);
 const [loadingItems, setLoadingItems] = useState(false);
 const [itemsError, setItemsError] = useState("");
@@ -98,6 +252,109 @@ const emptyVisualForm = {
 };
 
 const [visualForm, setVisualForm] = useState(emptyVisualForm);
+
+const defaultSiteContent = {
+  hero_image: "",
+  hero_image_2: "",
+  hero_image_3: "",
+  hero_image_4: "",
+  hero_primary_button: "iniciar proyecto",
+  hero_secondary_button: "ver studio",
+
+  briefing_title: "¿qué quieres hacer?",
+  briefing_text:
+    "cuéntanos tu idea y recibe una lectura preliminar. es el primer paso para convertirla en un proyecto más claro.",
+  briefing_title_desktop: "72",
+  briefing_title_mobile: "48",
+  briefing_text_desktop: "16",
+  briefing_text_mobile: "15",
+
+  projects_title: "el portfolio como primer argumento.",
+  projects_title_desktop: "72",
+  projects_title_mobile: "48",
+
+  visuals_title: "visualización como parte de vork studio.",
+  visuals_title_desktop: "72",
+  visuals_title_mobile: "48",
+
+  investments_title: "conceptos para activar capital, tierra y visión.",
+  investments_text:
+    "barn houses, casas de retiro, complejos deportivos, centros de salud y destinos turísticos conceptuales.",
+  investments_title_desktop: "72",
+  investments_title_mobile: "48",
+  investments_text_desktop: "16",
+  investments_text_mobile: "15",
+
+  brand_title: "una marca, cuatro líneas.",
+  brand_title_desktop: "72",
+  brand_title_mobile: "48",
+
+  studio_title: "studio",
+  studio_text: "arquitectura, visualización y desarrollo conceptual.",
+  build_title: "construcción",
+  build_text: "ejecución y construcción, próximamente.",
+  properties_title: "propiedades",
+  properties_text: "selección y desarrollo de oportunidades inmobiliarias.",
+  investments_card_title: "inversiones",
+  investments_text_card: "oportunidades conceptuales para inversionistas.",
+  ecosystem_title_desktop: "44",
+  ecosystem_title_mobile: "29",
+  ecosystem_text_desktop: "15",
+  ecosystem_text_mobile: "15",
+};
+
+const [siteContent, setSiteContent] = useState(defaultSiteContent);
+const [siteContentLoading, setSiteContentLoading] = useState(false);
+const [siteContentSaving, setSiteContentSaving] = useState(false);
+const [siteContentMessage, setSiteContentMessage] = useState("");
+
+async function loadSiteContent(passwordOverride?: string) {
+  const savedPassword = passwordOverride || password || sessionStorage.getItem("vork-dashboard-password") || "";
+  if (!savedPassword) return;
+  setSiteContentLoading(true);
+  setSiteContentMessage("");
+  try {
+    const response = await fetch("/api/dashboard/site-content", {
+      cache: "no-store",
+      headers: { "x-dashboard-password": savedPassword },
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      setSiteContentMessage(data.error || "no se pudo cargar el contenido web");
+      return;
+    }
+    setSiteContent({ ...defaultSiteContent, ...(data.content || {}) });
+  } catch {
+    setSiteContentMessage("no se pudo conectar con el contenido web");
+  } finally {
+    setSiteContentLoading(false);
+  }
+}
+
+async function saveSiteContent() {
+  const savedPassword = password || sessionStorage.getItem("vork-dashboard-password") || "";
+  setSiteContentSaving(true);
+  setSiteContentMessage("");
+  try {
+    const response = await fetch("/api/dashboard/site-content", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", "x-dashboard-password": savedPassword },
+      body: JSON.stringify({ content: siteContent }),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      setSiteContentMessage(data.error || "no se pudo guardar el contenido web");
+      return;
+    }
+    setSiteContent({ ...defaultSiteContent, ...(data.content || {}) });
+    setSiteContentMessage("cambios guardados correctamente");
+  } catch {
+    setSiteContentMessage("no se pudo conectar con el servidor");
+  } finally {
+    setSiteContentSaving(false);
+  }
+}
+
 
 function resetVisualForm() {
   setVisualForm(emptyVisualForm);
@@ -479,22 +736,60 @@ async function uploadImage(file: File) {
   const savedPassword = sessionStorage.getItem("vork-dashboard-password");
 
   if (saved === "true" && savedPassword) {
-    setAuthenticated(true);
-    loadItems(savedPassword);
+    (async () => {
+      try {
+        const response = await fetch("/api/dashboard/items", {
+          method: "GET",
+          cache: "no-store",
+          headers: { "x-dashboard-password": savedPassword },
+        });
+        const data = await response.json();
+        if (!response.ok) {
+          sessionStorage.removeItem("vork-dashboard-auth");
+          sessionStorage.removeItem("vork-dashboard-password");
+          setAuthenticated(false);
+          return;
+        }
+        setItems(Array.isArray(data.items) ? data.items : []);
+        setAuthenticated(true);
+      } catch {
+        sessionStorage.removeItem("vork-dashboard-auth");
+        sessionStorage.removeItem("vork-dashboard-password");
+        setAuthenticated(false);
+      }
+    })();
   }
 }, []);
 
-  async function enterDashboard() {
-  if (!password.trim()) return;
-
-  sessionStorage.setItem("vork-dashboard-password", password);
-  sessionStorage.setItem("vork-dashboard-auth", "true");
-  setAuthenticated(true);
-  loadItems(password);
+async function enterDashboard() {
+  if (!password.trim() || loginLoading) return;
+  setLoginLoading(true);
+  setLoginError("");
+  try {
+    const response = await fetch("/api/dashboard/items", {
+      method: "GET",
+      cache: "no-store",
+      headers: { "x-dashboard-password": password },
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      setLoginError(response.status === 401 ? "contraseña incorrecta :(" : (data.error || "no se pudo iniciar sesión"));
+      return;
+    }
+    sessionStorage.setItem("vork-dashboard-password", password);
+    sessionStorage.setItem("vork-dashboard-auth", "true");
+    setItems(Array.isArray(data.items) ? data.items : []);
+    setAuthenticated(true);
+  } catch {
+    setLoginError("no se pudo conectar con el servidor :(");
+  } finally {
+    setLoginLoading(false);
+  }
 }
 
   useEffect(() => {
     if (authenticated && activeSection === "leads") loadLeads();
+    if (authenticated && activeSection === "contenido") loadSiteContent();
   }, [authenticated, activeSection]);
 
   if (!authenticated) {
@@ -531,12 +826,19 @@ async function uploadImage(file: File) {
                 placeholder="contraseña privada"
               />
 
+              {loginError && (
+                <p className="mt-4 text-sm font-bold lowercase text-white/70">
+                  {loginError}
+                </p>
+              )}
+
               <button
                 type="button"
                 onClick={enterDashboard}
-                className="mt-4 rounded-full bg-white px-6 py-3 text-sm font-black lowercase text-black"
+                disabled={loginLoading}
+                className="mt-4 rounded-full bg-white px-6 py-3 text-sm font-black lowercase text-black transition disabled:cursor-wait disabled:opacity-50"
               >
-                entrar
+                {loginLoading ? "comprobando..." : "entrar"}
               </button>
             </div>
           </div>
@@ -798,6 +1100,192 @@ async function uploadImage(file: File) {
                     </p>
                   </button>
                 ))}
+              </div>
+            )}
+
+            {activeSection === "contenido" && (
+              <div className="relative">
+                {siteContentLoading ? (
+                  <p className="py-10 text-sm text-black/45">cargando contenido...</p>
+                ) : (
+                  <div className="space-y-8">
+                    <ContentEditorSection
+                      number="01"
+                      title="hero"
+                      description="primera pantalla del sitio. aquí controlas sus imágenes y los textos de los dos botones."
+                    >
+                      <div className="grid gap-5 md:grid-cols-2">
+                        <CmsTextField label="botón principal" value={siteContent.hero_primary_button} onChange={(value) => setSiteContent({ ...siteContent, hero_primary_button: value })} />
+                        <CmsTextField label="botón secundario" value={siteContent.hero_secondary_button} onChange={(value) => setSiteContent({ ...siteContent, hero_secondary_button: value })} />
+                      </div>
+
+                      <div className="mt-7 border-t border-black/10 pt-7">
+                        <p className="text-xs font-bold lowercase text-black/45">imágenes del hero</p>
+                        <p className="mt-2 text-xs leading-5 text-black/35">se muestran en el carrusel en este mismo orden.</p>
+                        <div className="mt-5 grid gap-5 md:grid-cols-2">
+                          {(["hero_image", "hero_image_2", "hero_image_3", "hero_image_4"] as const).map((key, index) => (
+                            <CmsImageField
+                              key={key}
+                              label={`imagen ${index + 1}`}
+                              value={(siteContent as any)[key] || ""}
+                              onUpload={async (file) => {
+                                try {
+                                  setSiteContentMessage("");
+                                  const url = await uploadImage(file);
+                                  setSiteContent((current) => ({ ...current, [key]: url }));
+                                } catch {
+                                  setSiteContentMessage("no se pudo subir la imagen");
+                                }
+                              }}
+                              onRemove={() => setSiteContent((current) => ({ ...current, [key]: "" }))}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </ContentEditorSection>
+
+                    <ContentEditorSection
+                      number="02"
+                      title="vork ai"
+                      description="encabezado que aparece inmediatamente antes del formulario de análisis."
+                    >
+                      <CmsTypographyField
+                        label="título"
+                        value={siteContent.briefing_title}
+                        onChange={(value) => setSiteContent({ ...siteContent, briefing_title: value })}
+                        desktop={siteContent.briefing_title_desktop}
+                        mobile={siteContent.briefing_title_mobile}
+                        onDesktop={(value) => setSiteContent({ ...siteContent, briefing_title_desktop: value })}
+                        onMobile={(value) => setSiteContent({ ...siteContent, briefing_title_mobile: value })}
+                      />
+                      <CmsTypographyField
+                        label="texto de apoyo"
+                        value={siteContent.briefing_text}
+                        onChange={(value) => setSiteContent({ ...siteContent, briefing_text: value })}
+                        desktop={siteContent.briefing_text_desktop}
+                        mobile={siteContent.briefing_text_mobile}
+                        onDesktop={(value) => setSiteContent({ ...siteContent, briefing_text_desktop: value })}
+                        onMobile={(value) => setSiteContent({ ...siteContent, briefing_text_mobile: value })}
+                        multiline
+                      />
+                    </ContentEditorSection>
+
+                    <ContentEditorSection number="03" title="proyectos" description="título que introduce el carrusel de proyectos de vork studio.">
+                      <CmsTypographyField
+                        label="título"
+                        value={siteContent.projects_title}
+                        onChange={(value) => setSiteContent({ ...siteContent, projects_title: value })}
+                        desktop={siteContent.projects_title_desktop}
+                        mobile={siteContent.projects_title_mobile}
+                        onDesktop={(value) => setSiteContent({ ...siteContent, projects_title_desktop: value })}
+                        onMobile={(value) => setSiteContent({ ...siteContent, projects_title_mobile: value })}
+                      />
+                    </ContentEditorSection>
+
+                    <ContentEditorSection number="04" title="visualizaciones" description="título que introduce el carrusel de visualizaciones.">
+                      <CmsTypographyField
+                        label="título"
+                        value={siteContent.visuals_title}
+                        onChange={(value) => setSiteContent({ ...siteContent, visuals_title: value })}
+                        desktop={siteContent.visuals_title_desktop}
+                        mobile={siteContent.visuals_title_mobile}
+                        onDesktop={(value) => setSiteContent({ ...siteContent, visuals_title_desktop: value })}
+                        onMobile={(value) => setSiteContent({ ...siteContent, visuals_title_mobile: value })}
+                      />
+                    </ContentEditorSection>
+
+                    <ContentEditorSection number="05" title="inversiones" description="encabezado y descripción que aparecen antes del carrusel de oportunidades.">
+                      <CmsTypographyField
+                        label="título"
+                        value={siteContent.investments_title}
+                        onChange={(value) => setSiteContent({ ...siteContent, investments_title: value })}
+                        desktop={siteContent.investments_title_desktop}
+                        mobile={siteContent.investments_title_mobile}
+                        onDesktop={(value) => setSiteContent({ ...siteContent, investments_title_desktop: value })}
+                        onMobile={(value) => setSiteContent({ ...siteContent, investments_title_mobile: value })}
+                      />
+                      <CmsTypographyField
+                        label="descripción"
+                        value={siteContent.investments_text}
+                        onChange={(value) => setSiteContent({ ...siteContent, investments_text: value })}
+                        desktop={siteContent.investments_text_desktop}
+                        mobile={siteContent.investments_text_mobile}
+                        onDesktop={(value) => setSiteContent({ ...siteContent, investments_text_desktop: value })}
+                        onMobile={(value) => setSiteContent({ ...siteContent, investments_text_mobile: value })}
+                        multiline
+                      />
+                    </ContentEditorSection>
+
+                    <ContentEditorSection number="06" title="ecosistema vork" description="título de la sección y los cuatro bloques que llevan a cada línea de vork.">
+                      <CmsTypographyField
+                        label="título de la sección"
+                        value={siteContent.brand_title}
+                        onChange={(value) => setSiteContent({ ...siteContent, brand_title: value })}
+                        desktop={siteContent.brand_title_desktop}
+                        mobile={siteContent.brand_title_mobile}
+                        onDesktop={(value) => setSiteContent({ ...siteContent, brand_title_desktop: value })}
+                        onMobile={(value) => setSiteContent({ ...siteContent, brand_title_mobile: value })}
+                      />
+
+                      <div className="mt-7 grid gap-5 md:grid-cols-2">
+                        {[
+                          ["studio", "studio_title", "studio_text"],
+                          ["construcción", "build_title", "build_text"],
+                          ["propiedades", "properties_title", "properties_text"],
+                          ["inversiones", "investments_card_title", "investments_text_card"],
+                        ].map(([label, titleKey, textKey]) => (
+                          <div key={titleKey} className="rounded-2xl border border-black/10 bg-[#fafafa] p-5">
+                            <p className="mb-5 text-xs font-black lowercase tracking-[0.06em] text-black/35">{label}</p>
+                            <CmsTextField
+                              label="nombre"
+                              value={(siteContent as any)[titleKey] || ""}
+                              onChange={(value) => setSiteContent((current) => ({ ...current, [titleKey]: value }))}
+                            />
+                            <div className="mt-4">
+                              <CmsTextField
+                                label="descripción"
+                                value={(siteContent as any)[textKey] || ""}
+                                onChange={(value) => setSiteContent((current) => ({ ...current, [textKey]: value }))}
+                                multiline
+                              />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="mt-6 grid gap-4 border-t border-black/10 pt-6 md:grid-cols-2">
+                        <CmsSizeControl label="tamaño nombres" desktop={siteContent.ecosystem_title_desktop} mobile={siteContent.ecosystem_title_mobile} onDesktop={(value) => setSiteContent({ ...siteContent, ecosystem_title_desktop: value })} onMobile={(value) => setSiteContent({ ...siteContent, ecosystem_title_mobile: value })} />
+                        <CmsSizeControl label="tamaño descripciones" desktop={siteContent.ecosystem_text_desktop} mobile={siteContent.ecosystem_text_mobile} onDesktop={(value) => setSiteContent({ ...siteContent, ecosystem_text_desktop: value })} onMobile={(value) => setSiteContent({ ...siteContent, ecosystem_text_mobile: value })} />
+                      </div>
+                    </ContentEditorSection>
+
+                    {siteContentMessage && (
+                      <p className="rounded-2xl border border-black/10 bg-white px-5 py-4 text-sm font-bold lowercase text-black/55">
+                        {siteContentMessage}
+                      </p>
+                    )}
+
+                    <div className="sticky bottom-6 z-40 flex justify-end">
+                      <div className="flex items-center gap-3 rounded-full bg-white/90 p-1.5 shadow-[0_14px_45px_rgba(0,0,0,0.12)] backdrop-blur-xl">
+                        <button
+                          type="button"
+                          onClick={() => setActiveSection("inicio")}
+                          className="rounded-full border border-black/10 bg-white px-6 py-3.5 text-xs font-bold lowercase text-black transition duration-300 hover:border-black hover:bg-black hover:text-white"
+                        >
+                          ← regresar
+                        </button>
+                        <button
+                          type="button"
+                          onClick={saveSiteContent}
+                          disabled={siteContentSaving}
+                          className="rounded-full bg-black px-7 py-3.5 text-xs font-bold lowercase text-white transition duration-300 hover:bg-[#303030] disabled:opacity-50"
+                        >
+                          {siteContentSaving ? "guardando..." : "guardar cambios"}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 

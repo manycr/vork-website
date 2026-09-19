@@ -1,14 +1,123 @@
 import { Header } from "@/components/Header";
-import { getItemBySlug } from "@/lib/cms";
+import { BackFloat } from "@/components/BackFloat";
+import { getItemBySlug, getPublishedItems } from "@/lib/cms";
 import { notFound } from "next/navigation";
+
 export default async function Detail({ params }: { params: Promise<{ slug: string }> }) {
- const { slug } = await params; const item = await getItemBySlug(slug); if (!item || item.type !== "investment") notFound();
- return <main className="min-h-screen bg-#101010 text-#f4f0e8"><Header/>
-  <section className="flex min-h-screen items-end bg-cover bg-center px-[7vw] pb-20 text-white" style={{ backgroundImage: `linear-gradient(0deg,rgba(0,0,0,.62),rgba(0,0,0,.05)),url('${item.cover_image || ""}')` }}>
-   <div className="max-w-5xl"><p className="mb-5 text-xs font-black lowercase tracking-[0.24em] text-white/60">{item.category}</p><h1 className="text-6xl font-black lowercase leading-[0.88] tracking-[-0.075em] md:text-9xl">{item.title}</h1></div>
-  </section>
-  <section className="px-[7vw] py-24"><a href="/investments" className="mb-14 inline-flex text-sm font-black lowercase text-white/50">← volver</a><div className="grid gap-16 md:grid-cols-[0.45fr_1fr]"><div className="space-y-5 text-sm"><Info label="ubicación" value={item.location || "por definir"} /><Info label="año" value={item.year || "por definir"} /><Info label="área" value={item.area || "por definir"} /><Info label="servicios" value={item.services?.join(", ") || "por definir"} /></div><div><h2 className="text-5xl font-black lowercase leading-[0.95] tracking-[-0.06em]">{item.concept || item.description}</h2>{item.investment_thesis && <p className="mt-8 max-w-2xl text-white/55">{item.investment_thesis}</p>}</div></div></section>
-  <section className="grid gap-6 px-[7vw] pb-32">{(item.gallery || []).map((image) => <div key={image} className="min-h-[680px] bg-cover bg-center" style={{ backgroundImage: `url('${image}')` }} />)}</section>
- </main>
+  const { slug } = await params;
+  const item = await getItemBySlug(slug);
+  if (!item || item.type !== "investment") notFound();
+
+  const investments = await getPublishedItems("investment");
+  const currentIndex = investments.findIndex((investment) => investment.slug === slug);
+  const nextInvestment =
+    investments.length > 1
+      ? investments[(currentIndex + 1) % investments.length]
+      : null;
+
+  return (
+    <main className="min-h-screen bg-white text-[#101010]">
+      <Header />
+
+      <section
+        className="relative flex min-h-[92svh] items-end overflow-hidden bg-cover bg-center px-[7vw] pb-16 text-white md:pb-20"
+        style={{ backgroundImage: `url('${item.cover_image || ""}')` }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/8 to-black/5" />
+        <div className="relative z-10 mx-auto w-full max-w-[1500px]">
+          <h1 className="max-w-[1050px] text-[clamp(4.5rem,8vw,9rem)] font-normal lowercase leading-[.86] tracking-[-0.07em]">
+            {item.title}
+          </h1>
+
+          {item.price && (
+            <p className="mt-6 text-[clamp(1.6rem,2.6vw,2.8rem)] font-normal tracking-[-0.04em]">
+              {item.price}
+            </p>
+          )}
+
+          {item.summary && (
+            <p className="mt-5 max-w-xl text-[16px] leading-7 text-white/78">
+              {item.summary}
+            </p>
+          )}
+        </div>
+      </section>
+
+      <section className="px-[7vw] py-20 md:py-28">
+        <div className="mx-auto grid max-w-[1500px] gap-16 lg:grid-cols-[.65fr_1.35fr]">
+          <div className="grid content-start gap-5">
+            <Info label="ubicación" value={item.location || "por definir"} />
+            <Info label="área" value={item.area || "por definir"} />
+            {item.year && <Info label="año" value={item.year} />}
+            {item.price && <Info label="inversión" value={item.price} />}
+            {item.services?.length ? (
+              <Info label="servicios" value={item.services.join(" · ")} />
+            ) : null}
+          </div>
+
+          <div>
+            <h2 className="max-w-[900px] text-[clamp(2.8rem,5vw,5.7rem)] font-normal lowercase leading-[.93] tracking-[-0.055em]">
+              {item.concept || item.description}
+            </h2>
+
+            {item.investment_thesis && (
+              <p className="mt-8 max-w-2xl text-[17px] leading-7 text-neutral-500">
+                {item.investment_thesis}
+              </p>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {(item.gallery || []).length > 0 && (
+        <section className="grid grid-cols-1 gap-5 px-[7vw] pb-28 md:grid-cols-2">
+          {(item.gallery || []).map((image) => (
+            <div
+              key={image}
+              className="aspect-[4/3] overflow-hidden rounded-[22px] bg-neutral-100"
+            >
+              <img src={image} alt="" className="h-full w-full object-cover" />
+            </div>
+          ))}
+        </section>
+      )}
+
+      {nextInvestment && (
+        <section className="px-[7vw] pb-28 pt-6">
+          <div className="mx-auto max-w-[1500px]">
+            <p className="mb-5 text-[13px] lowercase text-neutral-400">
+              siguiente oportunidad
+            </p>
+
+            <a href={`/investments/${nextInvestment.slug}`} className="group block">
+              <div className="relative aspect-[16/7] overflow-hidden rounded-[24px]">
+                <img
+                  src={nextInvestment.cover_image || ""}
+                  alt={nextInvestment.title}
+                  className="h-full w-full object-cover transition duration-700 group-hover:scale-[1.02]"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
+                <div className="absolute inset-x-0 bottom-0 p-7 md:p-10">
+                  <h2 className="text-[clamp(2.8rem,5vw,5.8rem)] font-normal lowercase leading-[.9] tracking-[-0.06em] text-white">
+                    {nextInvestment.title} <span className="font-light">→</span>
+                  </h2>
+                </div>
+              </div>
+            </a>
+          </div>
+        </section>
+      )}
+
+      <BackFloat />
+    </main>
+  );
 }
-function Info({ label, value }: { label: string; value: string }) {return <div className="border-t border-black/15 pt-4"><p className="text-[0.68rem] font-black lowercase tracking-[0.22em] text-[#7a7468]">{label}</p><p className="mt-2 font-bold">{value}</p></div>}
+
+function Info({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="border-t border-black/10 pt-4">
+      <p className="text-[12px] lowercase text-neutral-400">{label}</p>
+      <p className="mt-2 text-[17px] leading-6">{value}</p>
+    </div>
+  );
+}

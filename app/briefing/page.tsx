@@ -3,16 +3,31 @@ import { Estimator } from "@/components/Estimator";
 
 export default function BriefingPage() {
   return (
-    <main className="min-h-screen bg-[#f4f0e8]">
+    <main className="min-h-screen bg-white text-[#101010]">
       <Header />
-      <section className="px-[7vw] pb-10 pt-36">
-        <a href="/" className="mb-12 inline-flex text-sm font-black lowercase text-neutral-500">← volver</a>
-        <p className="mb-5 text-xs font-black lowercase tracking-[0.08em] text-[#7a7468]">vork briefing</p>
-        <h1 className="max-w-5xl text-6xl font-black lowercase leading-[0.88] tracking-[-0.075em] md:text-9xl">
-          una entrada clara para iniciar tu proyecto.
-        </h1>
+
+      <section className="px-[7vw] pb-14 pt-20 md:pb-20 md:pt-28">
+        <div className="mx-auto max-w-[1500px]">
+          <a href="/" className="inline-flex text-sm lowercase text-neutral-400 transition hover:text-black">
+            ← volver
+          </a>
+
+          <div className="mt-14 grid gap-8 lg:grid-cols-[1.2fr_.8fr] lg:items-end">
+            <h1 className="section-title max-w-[920px]">
+              una entrada clara para iniciar tu proyecto.
+            </h1>
+            <p className="section-copy max-w-xl lg:pb-2">
+              cuéntanos qué quieres hacer. organizamos la información para darte una primera lectura del proyecto.
+            </p>
+          </div>
+        </div>
       </section>
-      <Estimator />
+
+      <section className="px-[7vw] pb-24">
+        <div className="mx-auto max-w-[1500px]">
+          <Estimator />
+        </div>
+      </section>
     </main>
   );
 }

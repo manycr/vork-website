@@ -42,6 +42,9 @@ export type AIReport = {
   title: string;
   complexity: "Baja" | "Media" | "Alta";
   leadScore: number;
+  constructionRange: string;
+  professionalFeesRange: string;
+  otherCosts: string;
   investmentRange: string;
   estimatedTime: string;
   clientSummary: string;
