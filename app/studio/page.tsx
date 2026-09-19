@@ -1,3 +1,4 @@
+import { cookies } from "next/headers";
 import { Header } from "@/components/Header";
 import { BackFloat } from "@/components/BackFloat";
 import { getPublishedItems } from "@/lib/cms";
@@ -8,6 +9,9 @@ export default async function StudioPage() {
     getPublishedItems("visual"),
   ]);
 
+  const lang = (await cookies()).get("vork_lang")?.value === "en" ? "en" : "es";
+  const en = lang === "en";
+
   return (
     <main className="min-h-screen bg-white text-[#101010]">
       <Header />
@@ -15,10 +19,10 @@ export default async function StudioPage() {
       <section className="px-[7vw] pb-16 pt-28 md:pb-20 md:pt-32">
         <div className="mx-auto max-w-[1500px]">
           <h1 className="max-w-[900px] text-[clamp(4.5rem,7.2vw,8rem)] font-normal lowercase leading-[.92] tracking-[-0.065em] text-balance">
-            proyectos y visualizaciones.
+            {en ? "projects and visualizations." : "proyectos y visualizaciones."}
           </h1>
           <p className="mt-6 max-w-xl text-[16px] leading-7 text-neutral-500">
-            arquitectura y representación como parte de un mismo proceso.
+            {en ? "architecture and representation as part of the same process." : "arquitectura y representación como parte de un mismo proceso."}
           </p>
         </div>
       </section>
@@ -51,7 +55,7 @@ export default async function StudioPage() {
         <section className="px-[7vw] pb-28 pt-8">
           <div className="mx-auto max-w-[1500px]">
             <h2 className="mb-10 text-[clamp(3.5rem,5.4vw,6rem)] font-normal lowercase leading-[.95] tracking-[-0.055em]">
-              visualizaciones.
+              {en ? "visualizations." : "visualizaciones."}
             </h2>
             <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
               {visuals.map((item: any) => (

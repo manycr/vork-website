@@ -6,19 +6,32 @@ type Props = {
   primaryButton: string;
   secondaryButton: string;
   images: string[];
+  language: "es" | "en";
+  titles?: string[];
+  subtitle?: string;
 };
 
-const titles = [
+const spanishTitles = [
   "arquitectura con dirección.",
   "espacios pensados para vivir.",
   "visualizar antes de construir.",
   "de la idea a la obra.",
 ];
 
+const englishTitles = [
+  "architecture with purpose.",
+  "spaces designed for living.",
+  "visualize before building.",
+  "from concept to construction.",
+];
+
 export function HeroSlider({
   primaryButton,
   secondaryButton,
   images,
+  language,
+  titles,
+  subtitle,
 }: Props) {
   const slides = useMemo(
     () =>
@@ -26,9 +39,9 @@ export function HeroSlider({
         .filter(Boolean)
         .map((image, index) => ({
           image,
-          title: titles[index] || titles[0],
+          title: titles?.[index] || (language === "en" ? englishTitles : spanishTitles)[index] || (language === "en" ? englishTitles : spanishTitles)[0],
         })),
-    [images]
+    [images, language, titles]
   );
 
   const [index, setIndex] = useState(0);
@@ -76,7 +89,7 @@ export function HeroSlider({
             </h1>
 
             <p className="mt-7 text-[16px] lowercase text-white/78">
-              arquitectura, visualización y desarrollo.
+              {subtitle || (language === "en" ? "architecture, visualization and development." : "arquitectura, visualización y desarrollo.")}
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-7">
@@ -104,7 +117,7 @@ export function HeroSlider({
         <>
           <button
             type="button"
-            aria-label="imagen anterior"
+            aria-label={language === "en" ? "previous image" : "imagen anterior"}
             onClick={previous}
             className="absolute left-4 top-1/2 z-20 -translate-y-1/2 text-3xl font-light text-white/55 transition hover:text-white md:left-7"
           >
@@ -113,7 +126,7 @@ export function HeroSlider({
 
           <button
             type="button"
-            aria-label="imagen siguiente"
+            aria-label={language === "en" ? "next image" : "imagen siguiente"}
             onClick={next}
             className="absolute right-4 top-1/2 z-20 -translate-y-1/2 text-3xl font-light text-white/55 transition hover:text-white md:right-7"
           >
@@ -125,7 +138,7 @@ export function HeroSlider({
               <button
                 type="button"
                 key={dotIndex}
-                aria-label={`ir a imagen ${dotIndex + 1}`}
+                aria-label={`${language === "en" ? "go to image" : "ir a imagen"} ${dotIndex + 1}`}
                 onClick={() => setIndex(dotIndex)}
                 className={`h-[6px] rounded-full border border-white/80 transition-all duration-500 ${
                   dotIndex === index ? "w-7 bg-white" : "w-[6px] bg-transparent"

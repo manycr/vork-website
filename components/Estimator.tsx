@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type Report = {
   title: string;
@@ -32,6 +32,9 @@ const initial = {
 
 export function Estimator() {
   const [step, setStep] = useState(1);
+  const [lang, setLang] = useState<"es" | "en">("es");
+  useEffect(() => { setLang(document.cookie.includes("vork_lang=en") ? "en" : "es"); }, []);
+  const tr = (es: string, en: string) => lang === "en" ? en : es;
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [report, setReport] = useState<Report | null>(null);
@@ -44,17 +47,17 @@ export function Estimator() {
     setError("");
 
     if (step === 1 && !p.projectType) {
-      setError("selecciona una opción para continuar.");
+      setError(tr('selecciona una opción para continuar.', 'select an option to continue.'));
       return;
     }
 
     if (step === 2 && (!p.zone || !p.finish || !p.budget || !p.area)) {
-      setError("completa las opciones de esta etapa para continuar.");
+      setError(tr('completa las opciones de esta etapa para continuar.', 'complete this step to continue.'));
       return;
     }
 
     if (step === 3 && (!p.service || !p.goal || !p.urgency)) {
-      setError("completa las opciones de esta etapa para continuar.");
+      setError(tr('completa las opciones de esta etapa para continuar.', 'complete this step to continue.'));
       return;
     }
 
@@ -68,7 +71,7 @@ export function Estimator() {
 
   async function submit() {
     if (!p.name.trim() || !p.email.trim()) {
-      setError("necesitamos tu nombre y correo para enviarte el resumen.");
+      setError(tr('necesitamos tu nombre y correo para enviarte el resumen.', 'we need your name and email to send the summary.'));
       return;
     }
 
@@ -79,20 +82,20 @@ export function Estimator() {
       const response = await fetch("/api/analyze-project", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(p),
+        body: JSON.stringify({ ...p, language: lang }),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || "no pudimos procesar el proyecto.");
+        setError(data.error || tr("no pudimos procesar el proyecto.", "we could not process your project."));
         return;
       }
 
       setReport(data.report);
       setStep(5);
     } catch {
-      setError("no pudimos conectar con el servidor.");
+      setError(tr("no pudimos conectar con el servidor.", "could not connect to the server."));
     } finally {
       setLoading(false);
     }
@@ -103,7 +106,7 @@ export function Estimator() {
       <div className="mx-auto max-w-[1120px]">
         <div className="mb-10 flex items-end justify-between gap-6">
           <p className="text-[13px] lowercase text-neutral-400">
-            {step < 5 ? `0${step} / 04` : "listo"}
+            {step < 5 ? `0${step} / 04` : tr("listo", "done")}
           </p>
           {step < 5 && (
             <div className="h-px w-28 overflow-hidden bg-black/10 md:w-44">
@@ -117,41 +120,41 @@ export function Estimator() {
 
         <div className="min-h-[470px]">
           {step === 1 && (
-            <Step title="¿qué quieres hacer?" text="Empecemos por entender el proyecto, sin tecnicismos.">
+            <Step title={tr('¿qué quieres hacer?', 'what would you like to create?')} text={tr('Empecemos por entender el proyecto, sin tecnicismos.', 'Let’s understand your project, without technical jargon.')}>
               <ChoiceGrid
                 value={p.projectType}
                 onChange={(value) => update("projectType", value)}
                 options={[
-                  ["vivienda", "una vivienda nueva"],
-                  ["remodelacion", "remodelar o ampliar"],
-                  ["comercial", "un espacio comercial"],
-                  ["inmobiliario", "un desarrollo inmobiliario"],
-                  ["airbnb", "un proyecto turístico o de renta"],
+                  ["vivienda", tr('una vivienda nueva', 'a new home')],
+                  ["remodelacion", tr('remodelar o ampliar', 'renovate or expand')],
+                  ["comercial", tr('un espacio comercial', 'a commercial space')],
+                  ["inmobiliario", tr('un desarrollo inmobiliario', 'a real estate development')],
+                  ["airbnb", tr('un proyecto turístico o de renta', 'a tourism or rental project')],
                 ]}
               />
               {error && <p className="mt-6 text-sm text-red-700">{error}</p>}
-              <Actions onNext={next} />
+              <Actions onNext={next} nextLabel={tr("continuar", "continue")} />
             </Step>
           )}
 
           {step === 2 && (
-            <Step title="¿cómo imaginas el proyecto?" text="Estos datos nos ayudan a entender escala, ubicación y nivel de inversión.">
+            <Step title={tr('¿cómo imaginas el proyecto?', 'how do you envision your project?')} text={tr('Estos datos nos ayudan a entender escala, ubicación y nivel de inversión.', 'These details help us understand scale, location and investment level.')}>
               <div className="grid gap-x-10 gap-y-8 md:grid-cols-2">
-                <Field label="ubicación">
+                <Field label={tr('ubicación', 'location')}>
                   <SelectMenu
                     value={p.zone}
-                    placeholder="seleccionar ubicación"
+                    placeholder={tr('seleccionar ubicación', 'select location')}
                     onChange={(value) => update("zone", value)}
                     options={[
-                      ["gam", "gran área metropolitana"],
-                      ["costera", "zona costera"],
-                      ["rural", "zona rural"],
-                      ["turistica", "zona turística"],
+                      ["gam", tr('gran área metropolitana', 'greater metropolitan area')],
+                      ["costera", tr('zona costera', 'coastal area')],
+                      ["rural", tr('zona rural', 'rural area')],
+                      ["turistica", tr('zona turística', 'tourism area')],
                     ]}
                   />
                 </Field>
 
-                <Field label="área aproximada">
+                <Field label={tr('área aproximada', 'approximate area')}>
                   <div className="relative">
                     <input
                       className="ai-field pr-12"
@@ -164,96 +167,96 @@ export function Estimator() {
                   </div>
                 </Field>
 
-                <Field label="nivel de acabados">
+                <Field label={tr('nivel de acabados', 'finish level')}>
                   <SelectMenu
                     value={p.finish}
-                    placeholder="seleccionar acabados"
+                    placeholder={tr('seleccionar acabados', 'select finishes')}
                     onChange={(value) => update("finish", value)}
                     options={[
-                      ["basico", "funcional"],
+                      ["basico", tr('funcional', 'functional')],
                       ["medio", "medio"],
                       ["premium", "premium"],
-                      ["lujo", "alto / lujo"],
+                      ["lujo", tr('alto / lujo', 'high-end / luxury')],
                     ]}
                   />
                 </Field>
 
-                <Field label="presupuesto">
+                <Field label={tr('presupuesto', 'budget')}>
                   <SelectMenu
                     value={p.budget}
-                    placeholder="seleccionar presupuesto"
+                    placeholder={tr('seleccionar presupuesto', 'select budget')}
                     onChange={(value) => update("budget", value)}
                     options={[
-                      ["sin_definir", "todavía no lo sé"],
-                      ["bajo", "quiero optimizar al máximo"],
-                      ["medio", "tengo un rango medio"],
-                      ["alto", "priorizo diseño y calidad"],
+                      ["sin_definir", tr('todavía no lo sé', 'not sure yet')],
+                      ["bajo", tr('quiero optimizar al máximo', 'I want to optimize costs')],
+                      ["medio", tr('tengo un rango medio', 'I have a mid-range budget')],
+                      ["alto", tr('priorizo diseño y calidad', 'I prioritize design and quality')],
                     ]}
                   />
                 </Field>
               </div>
               {error && <p className="mt-6 text-sm text-red-700">{error}</p>}
-              <Actions onBack={back} onNext={next} />
+              <Actions onBack={back} onNext={next} nextLabel={tr("continuar", "continue")} backLabel={tr("← atrás", "← back")} />
             </Step>
           )}
 
           {step === 3 && (
-            <Step title="¿qué necesitas de nosotros?" text="No tienes que conocer el nombre técnico del servicio. Elige lo que más se acerque.">
+            <Step title={tr('¿qué necesitas de nosotros?', 'what do you need from us?')} text={tr('No tienes que conocer el nombre técnico del servicio. Elige lo que más se acerque.', 'You do not need to know the technical service name. Choose the closest option.')}>
               <ChoiceGrid
                 value={p.service}
                 onChange={(value) => update("service", value)}
                 options={[
-                  ["concepto", "definir la idea y el diseño"],
-                  ["planos", "llevarlo a planos y permisos"],
-                  ["renders", "visualizar un proyecto"],
-                  ["integral", "acompañamiento de diseño a obra"],
-                  ["obra", "construcción o seguimiento de obra"],
+                  ["concepto", tr('definir la idea y el diseño', 'define the idea and design')],
+                  ["planos", tr('llevarlo a planos y permisos', 'develop drawings and permits')],
+                  ["renders", tr('visualizar un proyecto', 'visualize a project')],
+                  ["integral", tr('acompañamiento de diseño a obra', 'support from design to construction')],
+                  ["obra", tr('construcción o seguimiento de obra', 'construction or site supervision')],
                 ]}
               />
 
               <div className="mt-10 grid gap-x-10 gap-y-8 md:grid-cols-2">
-                <Field label="objetivo principal">
+                <Field label={tr('objetivo principal', 'main goal')}>
                   <SelectMenu
                     value={p.goal}
-                    placeholder="seleccionar objetivo"
+                    placeholder={tr('seleccionar objetivo', 'select goal')}
                     onChange={(value) => update("goal", value)}
                     options={[
-                      ["construir", "construir"],
-                      ["remodelar", "remodelar"],
-                      ["vender", "desarrollar para vender"],
-                      ["rentabilizar", "desarrollar para rentabilizar"],
-                      ["validar", "validar una idea primero"],
+                      ["construir", tr('construir', 'build')],
+                      ["remodelar", tr('remodelar', 'renovate')],
+                      ["vender", tr('desarrollar para vender', 'develop to sell')],
+                      ["rentabilizar", tr('desarrollar para rentabilizar', 'develop for rental income')],
+                      ["validar", tr('validar una idea primero', 'validate an idea first')],
                     ]}
                   />
                 </Field>
 
-                <Field label="momento del proyecto">
+                <Field label={tr('momento del proyecto', 'project timing')}>
                   <SelectMenu
                     value={p.urgency}
-                    placeholder="seleccionar momento"
+                    placeholder={tr('seleccionar momento', 'select timing')}
                     onChange={(value) => update("urgency", value)}
                     options={[
-                      ["exploratoria", "estoy explorando"],
-                      ["normal", "quiero iniciar pronto"],
-                      ["inmediata", "necesito iniciar cuanto antes"],
+                      ["exploratoria", tr('estoy explorando', 'I am exploring')],
+                      ["normal", tr('quiero iniciar pronto', 'I want to start soon')],
+                      ["inmediata", tr('necesito iniciar cuanto antes', 'I need to start as soon as possible')],
                     ]}
                   />
                 </Field>
               </div>
               {error && <p className="mt-6 text-sm text-red-700">{error}</p>}
-              <Actions onBack={back} onNext={next} />
+              <Actions onBack={back} onNext={next} nextLabel={tr("continuar", "continue")} backLabel={tr("← atrás", "← back")} />
             </Step>
           )}
 
           {step === 4 && (
-            <Step title="¿a dónde enviamos tu lectura?" text="Recibirás un resumen del proyecto. La evaluación comercial interna nunca se muestra al cliente.">
+            <Step title={tr('¿a dónde enviamos tu lectura?', 'where should we send your assessment?')} text={tr('Recibirás un resumen del proyecto. La evaluación comercial interna nunca se muestra al cliente.', 'You will receive a project summary. Internal lead qualification is never shown to clients.')}>
               <div className="grid gap-x-10 gap-y-8 md:grid-cols-2">
-                <Field label="nombre">
-                  <input className="ai-field" value={p.name} onChange={(e) => update("name", e.target.value)} placeholder="tu nombre" />
+                <Field label={tr('nombre', 'name')}>
+                  <input className="ai-field" value={p.name} onChange={(e) => update("name", e.target.value)} placeholder={tr('tu nombre', 'your name')} />
                 </Field>
 
-                <Field label="correo">
-                  <input className="ai-field" type="email" value={p.email} onChange={(e) => update("email", e.target.value)} placeholder="correo@ejemplo.com" />
+                <Field label={tr('correo', 'email')}>
+                  <input className="ai-field" type="email" value={p.email} onChange={(e) => update("email", e.target.value)} placeholder={tr('correo@ejemplo.com', 'email@example.com')} />
                 </Field>
 
                 <Field label="whatsapp">
@@ -271,16 +274,16 @@ export function Estimator() {
               </div>
 
               {error && <p className="mt-6 text-sm text-red-700">{error}</p>}
-              <Actions onBack={back} onNext={submit} nextLabel={loading ? "preparando lectura..." : "recibir mi lectura"} disabled={loading} />
+              <Actions onBack={back} onNext={submit} nextLabel={loading ? tr("preparando lectura...", "preparing assessment...") : tr("recibir mi lectura", "get my assessment")} backLabel={tr("← atrás", "← back")} disabled={loading} />
             </Step>
           )}
 
           {step === 5 && report && (
             <div className="grid gap-10 lg:grid-cols-[1.05fr_.95fr]">
               <div>
-                <p className="mb-5 text-sm text-neutral-400">lectura preliminar</p>
+                <p className="mb-5 text-sm text-neutral-400">{tr("lectura preliminar", "preliminary assessment")}</p>
                 <h3 className="max-w-[700px] text-[clamp(2.8rem,5vw,5.4rem)] font-medium lowercase leading-[.94] tracking-[-0.06em]">
-                  ya entendemos mejor tu proyecto.
+                  {tr("ya entendemos mejor tu proyecto.", "we understand your project better.")}
                 </h3>
                 <p className="mt-7 max-w-2xl text-[17px] leading-7 text-neutral-500">
                   {report.clientSummary}
@@ -291,18 +294,17 @@ export function Estimator() {
               </div>
 
               <div className="border-t border-black/10 pt-6 lg:border-l lg:border-t-0 lg:pl-10 lg:pt-0">
-                <Result label="construcción estimada" value={report.constructionRange} />
-                <Result label="servicios profesionales" value={report.professionalFeesRange} />
-                <Result label="otros costos" value={report.otherCosts} />
-                <Result label="inversión preliminar" value={report.investmentRange} />
-                <Result label="tiempo preliminar" value={report.estimatedTime} />
-                <Result label="siguiente paso" value={report.visibleNextStep} />
+                <Result label={tr('construcción estimada', 'estimated construction cost')} value={report.constructionRange} />
+                <Result label={tr('servicios profesionales', 'professional fees')} value={report.professionalFeesRange} />
+                <Result label={tr('otros costos', 'other costs')} value={report.otherCosts} />
+                <Result label={tr('inversión preliminar', 'preliminary investment')} value={report.investmentRange} />
+                <Result label={tr('tiempo preliminar', 'preliminary timeline')} value={report.estimatedTime} />
+                <Result label={tr('siguiente paso', 'next step')} value={report.visibleNextStep} />
                 <p className="mt-8 text-xs leading-5 text-neutral-400">
-                  Esta lectura es preliminar. El costo definitivo requiere alcance, ubicación exacta,
-                  estudios y definición técnica del proyecto.
+                  {tr("Esta lectura es preliminar. El costo definitivo requiere alcance, ubicación exacta, estudios y definición técnica del proyecto.", "This is a preliminary assessment. Final costs require a defined scope, exact location, studies and technical project definition.")}
                 </p>
                 <p className="mt-3 text-xs leading-5 text-neutral-400">
-                  También enviamos este resumen a {p.email}.
+                  {tr("También enviamos este resumen a", "We also sent this summary to")} {p.email}.
                 </p>
               </div>
             </div>
@@ -426,13 +428,13 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   );
 }
 
-function Actions({ onBack, onNext, nextLabel = "continuar", disabled = false }: { onBack?: () => void; onNext: () => void; nextLabel?: string; disabled?: boolean }) {
+function Actions({ onBack, onNext, nextLabel = "continuar", backLabel = "← atrás", disabled = false }: { onBack?: () => void; onNext: () => void; nextLabel?: string; backLabel?: string; disabled?: boolean }) {
   return (
     <div className="mt-12 flex items-center justify-between gap-4">
       <div>
         {onBack && (
           <button type="button" onClick={onBack} className="text-sm lowercase text-neutral-400 transition hover:text-black">
-            ← atrás
+            {backLabel}
           </button>
         )}
       </div>

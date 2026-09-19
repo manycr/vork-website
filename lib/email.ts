@@ -19,31 +19,32 @@ export async function sendLeadEmails(payload: EstimatorPayload, report: AIReport
   const from = process.env.RESEND_FROM_EMAIL;
   const internalEmail = process.env.VORK_INTERNAL_EMAIL;
 
+  const en = payload.language === "en";
   const clientHtml = `
     <div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;line-height:1.6;color:#111;max-width:680px;margin:auto;padding:32px">
       <p style="font-size:14px;color:#777;margin:0 0 32px">vork studio</p>
-      <h1 style="font-size:42px;line-height:1.05;letter-spacing:-2px;font-weight:500;margin:0 0 28px">ya entendemos mejor tu proyecto.</h1>
-      <p>Hola ${esc(payload.name)},</p>
+      <h1 style="font-size:42px;line-height:1.05;letter-spacing:-2px;font-weight:500;margin:0 0 28px">${en ? 'we understand your project better.' : 'ya entendemos mejor tu proyecto.'}</h1>
+      <p>${en ? 'Hello' : 'Hola'} ${esc(payload.name)},</p>
       <p>${esc(report.clientSummary)}</p>
 
       <div style="margin:32px 0;padding:24px 0;border-top:1px solid #ddd;border-bottom:1px solid #ddd">
-        <p style="margin:0 0 6px;color:#777;font-size:13px">Construcción estimada</p>
+        <p style="margin:0 0 6px;color:#777;font-size:13px">${en ? 'Estimated construction cost' : 'Construcción estimada'}</p>
         <p style="margin:0 0 22px;font-size:20px">${esc(report.constructionRange)}</p>
-        <p style="margin:0 0 6px;color:#777;font-size:13px">Servicios profesionales</p>
+        <p style="margin:0 0 6px;color:#777;font-size:13px">${en ? 'Professional fees' : 'Servicios profesionales'}</p>
         <p style="margin:0 0 22px;font-size:20px">${esc(report.professionalFeesRange)}</p>
-        <p style="margin:0 0 6px;color:#777;font-size:13px">Otros costos</p>
+        <p style="margin:0 0 6px;color:#777;font-size:13px">${en ? 'Other costs' : 'Otros costos'}</p>
         <p style="margin:0 0 22px;font-size:16px">${esc(report.otherCosts)}</p>
-        <p style="margin:0 0 6px;color:#777;font-size:13px">Inversión preliminar</p>
+        <p style="margin:0 0 6px;color:#777;font-size:13px">${en ? 'Preliminary investment' : 'Inversión preliminar'}</p>
         <p style="margin:0 0 22px;font-size:25px">${esc(report.investmentRange)}</p>
-        <p style="margin:0 0 6px;color:#777;font-size:13px">Tiempo preliminar</p>
+        <p style="margin:0 0 6px;color:#777;font-size:13px">${en ? 'Preliminary timeline' : 'Tiempo preliminar'}</p>
         <p style="margin:0;font-size:18px">${esc(report.estimatedTime)}</p>
       </div>
 
       <p>${esc(report.clientMessage)}</p>
-      <p><strong>Siguiente paso:</strong> ${esc(report.visibleNextStep)}</p>
+      <p><strong>${en ? 'Next step:' : 'Siguiente paso:'}</strong> ${esc(report.visibleNextStep)}</p>
       <p style="margin-top:32px;color:#777;font-size:12px">
-        Esta lectura es preliminar y no constituye una cotización ni un presupuesto de obra.
-        Los honorarios definitivos y el valor de la obra deben verificarse según el alcance contratado.
+        ${en ? 'This assessment is preliminary and is not a quotation or construction budget.' : 'Esta lectura es preliminar y no constituye una cotización ni un presupuesto de obra.'}
+        ${en ? 'Final professional fees and construction costs must be verified against the agreed scope.' : 'Los honorarios definitivos y el valor de la obra deben verificarse según el alcance contratado.'}
       </p>
     </div>
   `;
@@ -51,7 +52,7 @@ export async function sendLeadEmails(payload: EstimatorPayload, report: AIReport
   await resend.emails.send({
     from,
     to: payload.email,
-    subject: "Tu lectura preliminar | VORK studio",
+    subject: en ? "Your preliminary assessment | VORK studio" : "Tu lectura preliminar | VORK studio",
     html: clientHtml,
   });
 

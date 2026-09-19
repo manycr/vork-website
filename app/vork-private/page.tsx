@@ -6,6 +6,7 @@ import type { ReactNode } from "react";
 type Section =
   | "inicio"
   | "contenido"
+  | "nosotros"
   | "proyectos"
   | "visualizaciones"
   | "inversiones"
@@ -23,6 +24,11 @@ const sections: { id: Section; label: string; description: string }[] = [
     id: "contenido",
     label: "contenido web",
     description: "textos e imagen principal",
+  },
+  {
+    id: "nosotros",
+    label: "nosotros",
+    description: "equipo, imágenes y textos bilingües",
   },
   {
     id: "proyectos",
@@ -203,6 +209,7 @@ function CmsImageField({
 
 export default function Dashboard() {
   const [activeSection, setActiveSection] = useState<Section>("inicio");
+  const [editorLanguage, setEditorLanguage] = useState<"es" | "en">("es");
   const [password, setPassword] = useState("");
   const [authenticated, setAuthenticated] = useState(false);
   const [loginError, setLoginError] = useState("");
@@ -254,10 +261,72 @@ const emptyVisualForm = {
 const [visualForm, setVisualForm] = useState(emptyVisualForm);
 
 const defaultSiteContent = {
+  about_image_1: "",
+  about_image_2: "",
+  about_title_es: "",
+  about_tagline_es: "",
+  about_intro_es: "",
+  about_context_es: "",
+  about_approach_es: "",
+  about_philosophy_es: "",
+  about_closing_es: "",
+  about_lines_es: "",
+  about_studio_es: "",
+  about_build_es: "",
+  about_properties_es: "",
+  about_investments_es: "",
+  about_people_es: "",
+  about_manuel_es: "",
+  about_paulo_es: "",
+  about_contact_es: "",
+  about_title_en: "",
+  about_tagline_en: "",
+  about_intro_en: "",
+  about_context_en: "",
+  about_approach_en: "",
+  about_philosophy_en: "",
+  about_closing_en: "",
+  about_lines_en: "",
+  about_studio_en: "",
+  about_build_en: "",
+  about_properties_en: "",
+  about_investments_en: "",
+  about_people_en: "",
+  about_manuel_en: "",
+  about_paulo_en: "",
+  about_contact_en: "",
+
   hero_image: "",
   hero_image_2: "",
   hero_image_3: "",
   hero_image_4: "",
+  hero_title_1_es: "",
+  hero_title_1_en: "",
+  hero_title_2_es: "",
+  hero_title_2_en: "",
+  hero_title_3_es: "",
+  hero_title_3_en: "",
+  hero_title_4_es: "",
+  hero_title_4_en: "",
+  hero_subtitle_es: "",
+  hero_subtitle_en: "",
+  hero_primary_button_en: "",
+  hero_secondary_button_en: "",
+  briefing_title_en: "",
+  briefing_text_en: "",
+  projects_title_en: "",
+  visuals_title_en: "",
+  investments_title_en: "",
+  investments_text_en: "",
+  brand_title_en: "",
+  studio_title_en: "",
+  studio_text_en: "",
+  build_title_en: "",
+  build_text_en: "",
+  properties_title_en: "",
+  properties_text_en: "",
+  investments_card_title_en: "",
+  investments_text_card_en: "",
   hero_primary_button: "iniciar proyecto",
   hero_secondary_button: "ver studio",
 
@@ -355,6 +424,29 @@ async function saveSiteContent() {
   }
 }
 
+
+const HOME_ENGLISH: Record<string, string> = {
+  hero_primary_button: "start a project", hero_secondary_button: "explore studio",
+  briefing_title: "what would you like to create?", briefing_text: "tell us your idea and receive an initial assessment. the first step toward a clearer project.",
+  projects_title: "our work speaks first.", visuals_title: "visualization as part of vork studio.",
+  investments_title: "concepts connecting capital, land and vision.", investments_text: "barn houses, retirement residences, sports complexes, wellness centers and conceptual travel destinations.",
+  brand_title: "one brand, four disciplines.", studio_title: "studio", studio_text: "architecture, visualization and conceptual development.",
+  build_title: "construction", build_text: "construction and project delivery, coming soon.",
+  properties_title: "properties", properties_text: "real estate opportunities and development.",
+  investments_card_title: "investments", investments_text_card: "conceptual opportunities for investors.",
+};
+const HOME_HERO_TITLES = {
+  es: ["arquitectura con dirección.", "espacios pensados para vivir.", "visualizar antes de construir.", "de la idea a la obra."],
+  en: ["architecture with purpose.", "spaces designed for living.", "visualize before building.", "from concept to construction."],
+};
+function homeText(key: string): string {
+  const content = siteContent as Record<string, string>;
+  return editorLanguage === "en" ? (content[`${key}_en`] || HOME_ENGLISH[key] || content[key] || "") : (content[key] || "");
+}
+function setHomeText(key: string, value: string) {
+  const actualKey = editorLanguage === "en" ? `${key}_en` : key;
+  setSiteContent((current) => ({ ...current, [actualKey]: value }));
+}
 
 function resetVisualForm() {
   setVisualForm(emptyVisualForm);
@@ -789,7 +881,7 @@ async function enterDashboard() {
 
   useEffect(() => {
     if (authenticated && activeSection === "leads") loadLeads();
-    if (authenticated && activeSection === "contenido") loadSiteContent();
+    if (authenticated && (activeSection === "contenido" || activeSection === "nosotros")) loadSiteContent();
   }, [authenticated, activeSection]);
 
   if (!authenticated) {
@@ -1109,14 +1201,27 @@ async function enterDashboard() {
                   <p className="py-10 text-sm text-black/45">cargando contenido...</p>
                 ) : (
                   <div className="space-y-8">
+                    <div className="mb-7 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-black/10 bg-[#fafafa] p-4">
+                        <div><p className="text-sm font-bold lowercase">idioma de edición</p><p className="mt-1 text-xs text-black/40">cada idioma tiene sus propios textos; las imágenes y tamaños son compartidos.</p></div>
+                        <div className="inline-flex rounded-full border border-black/10 bg-white p-1" role="group" aria-label="idioma de edición">
+                          {(["es", "en"] as const).map((lang) => <button key={lang} type="button" aria-pressed={editorLanguage === lang} onClick={() => setEditorLanguage(lang)} className={`rounded-full px-5 py-2 text-xs font-bold transition ${editorLanguage === lang ? "bg-black text-white" : "text-black/50 hover:text-black"}`}>{lang === "es" ? "español" : "english"}</button>)}
+                        </div>
+                      </div>
                     <ContentEditorSection
                       number="01"
                       title="hero"
                       description="primera pantalla del sitio. aquí controlas sus imágenes y los textos de los dos botones."
                     >
                       <div className="grid gap-5 md:grid-cols-2">
-                        <CmsTextField label="botón principal" value={siteContent.hero_primary_button} onChange={(value) => setSiteContent({ ...siteContent, hero_primary_button: value })} />
-                        <CmsTextField label="botón secundario" value={siteContent.hero_secondary_button} onChange={(value) => setSiteContent({ ...siteContent, hero_secondary_button: value })} />
+                        {[1, 2, 3, 4].map((number) => {
+                          const key = `hero_title_${number}_${editorLanguage}`;
+                          return <CmsTextField key={key} label={`título imagen ${number}`} value={(siteContent as Record<string, string>)[key] || HOME_HERO_TITLES[editorLanguage][number - 1]} onChange={(value) => setSiteContent((current) => ({ ...current, [key]: value }))} />;
+                        })}
+                      </div>
+                      <CmsTextField label="subtítulo del carrusel" value={(siteContent as Record<string, string>)[`hero_subtitle_${editorLanguage}`] || (editorLanguage === "en" ? "architecture, visualization and development." : "arquitectura, visualización y desarrollo.")} onChange={(value) => setSiteContent((current) => ({ ...current, [`hero_subtitle_${editorLanguage}`]: value }))} />
+                      <div className="grid gap-5 md:grid-cols-2">
+                        <CmsTextField label="botón principal" value={homeText("hero_primary_button")} onChange={(value) => setHomeText("hero_primary_button", value)} />
+                        <CmsTextField label="botón secundario" value={homeText("hero_secondary_button")} onChange={(value) => setHomeText("hero_secondary_button", value)} />
                       </div>
 
                       <div className="mt-7 border-t border-black/10 pt-7">
@@ -1151,8 +1256,8 @@ async function enterDashboard() {
                     >
                       <CmsTypographyField
                         label="título"
-                        value={siteContent.briefing_title}
-                        onChange={(value) => setSiteContent({ ...siteContent, briefing_title: value })}
+                        value={homeText("briefing_title")}
+                        onChange={(value) => setHomeText("briefing_title", value)}
                         desktop={siteContent.briefing_title_desktop}
                         mobile={siteContent.briefing_title_mobile}
                         onDesktop={(value) => setSiteContent({ ...siteContent, briefing_title_desktop: value })}
@@ -1160,8 +1265,8 @@ async function enterDashboard() {
                       />
                       <CmsTypographyField
                         label="texto de apoyo"
-                        value={siteContent.briefing_text}
-                        onChange={(value) => setSiteContent({ ...siteContent, briefing_text: value })}
+                        value={homeText("briefing_text")}
+                        onChange={(value) => setHomeText("briefing_text", value)}
                         desktop={siteContent.briefing_text_desktop}
                         mobile={siteContent.briefing_text_mobile}
                         onDesktop={(value) => setSiteContent({ ...siteContent, briefing_text_desktop: value })}
@@ -1173,8 +1278,8 @@ async function enterDashboard() {
                     <ContentEditorSection number="03" title="proyectos" description="título que introduce el carrusel de proyectos de vork studio.">
                       <CmsTypographyField
                         label="título"
-                        value={siteContent.projects_title}
-                        onChange={(value) => setSiteContent({ ...siteContent, projects_title: value })}
+                        value={homeText("projects_title")}
+                        onChange={(value) => setHomeText("projects_title", value)}
                         desktop={siteContent.projects_title_desktop}
                         mobile={siteContent.projects_title_mobile}
                         onDesktop={(value) => setSiteContent({ ...siteContent, projects_title_desktop: value })}
@@ -1185,8 +1290,8 @@ async function enterDashboard() {
                     <ContentEditorSection number="04" title="visualizaciones" description="título que introduce el carrusel de visualizaciones.">
                       <CmsTypographyField
                         label="título"
-                        value={siteContent.visuals_title}
-                        onChange={(value) => setSiteContent({ ...siteContent, visuals_title: value })}
+                        value={homeText("visuals_title")}
+                        onChange={(value) => setHomeText("visuals_title", value)}
                         desktop={siteContent.visuals_title_desktop}
                         mobile={siteContent.visuals_title_mobile}
                         onDesktop={(value) => setSiteContent({ ...siteContent, visuals_title_desktop: value })}
@@ -1197,8 +1302,8 @@ async function enterDashboard() {
                     <ContentEditorSection number="05" title="inversiones" description="encabezado y descripción que aparecen antes del carrusel de oportunidades.">
                       <CmsTypographyField
                         label="título"
-                        value={siteContent.investments_title}
-                        onChange={(value) => setSiteContent({ ...siteContent, investments_title: value })}
+                        value={homeText("investments_title")}
+                        onChange={(value) => setHomeText("investments_title", value)}
                         desktop={siteContent.investments_title_desktop}
                         mobile={siteContent.investments_title_mobile}
                         onDesktop={(value) => setSiteContent({ ...siteContent, investments_title_desktop: value })}
@@ -1206,8 +1311,8 @@ async function enterDashboard() {
                       />
                       <CmsTypographyField
                         label="descripción"
-                        value={siteContent.investments_text}
-                        onChange={(value) => setSiteContent({ ...siteContent, investments_text: value })}
+                        value={homeText("investments_text")}
+                        onChange={(value) => setHomeText("investments_text", value)}
                         desktop={siteContent.investments_text_desktop}
                         mobile={siteContent.investments_text_mobile}
                         onDesktop={(value) => setSiteContent({ ...siteContent, investments_text_desktop: value })}
@@ -1219,8 +1324,8 @@ async function enterDashboard() {
                     <ContentEditorSection number="06" title="ecosistema vork" description="título de la sección y los cuatro bloques que llevan a cada línea de vork.">
                       <CmsTypographyField
                         label="título de la sección"
-                        value={siteContent.brand_title}
-                        onChange={(value) => setSiteContent({ ...siteContent, brand_title: value })}
+                        value={homeText("brand_title")}
+                        onChange={(value) => setHomeText("brand_title", value)}
                         desktop={siteContent.brand_title_desktop}
                         mobile={siteContent.brand_title_mobile}
                         onDesktop={(value) => setSiteContent({ ...siteContent, brand_title_desktop: value })}
@@ -1238,14 +1343,14 @@ async function enterDashboard() {
                             <p className="mb-5 text-xs font-black lowercase tracking-[0.06em] text-black/35">{label}</p>
                             <CmsTextField
                               label="nombre"
-                              value={(siteContent as any)[titleKey] || ""}
-                              onChange={(value) => setSiteContent((current) => ({ ...current, [titleKey]: value }))}
+                              value={homeText(titleKey)}
+                              onChange={(value) => setHomeText(titleKey, value)}
                             />
                             <div className="mt-4">
                               <CmsTextField
                                 label="descripción"
-                                value={(siteContent as any)[textKey] || ""}
-                                onChange={(value) => setSiteContent((current) => ({ ...current, [textKey]: value }))}
+                                value={homeText(textKey)}
+                                onChange={(value) => setHomeText(textKey, value)}
                                 multiline
                               />
                             </div>
@@ -1286,6 +1391,56 @@ async function enterDashboard() {
                     </div>
                   </div>
                 )}
+              </div>
+            )}
+
+            {activeSection === "nosotros" && (
+              <div className="space-y-8">
+                {siteContentLoading ? <p className="py-10 text-sm text-black/45">cargando contenido...</p> : <>
+                  <div className="mb-7 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-black/10 bg-[#fafafa] p-4">
+                        <div><p className="text-sm font-bold lowercase">idioma de edición</p><p className="mt-1 text-xs text-black/40">cada idioma tiene sus propios textos; las imágenes y tamaños son compartidos.</p></div>
+                        <div className="inline-flex rounded-full border border-black/10 bg-white p-1" role="group" aria-label="idioma de edición">
+                          {(["es", "en"] as const).map((lang) => <button key={lang} type="button" aria-pressed={editorLanguage === lang} onClick={() => setEditorLanguage(lang)} className={`rounded-full px-5 py-2 text-xs font-bold transition ${editorLanguage === lang ? "bg-black text-white" : "text-black/50 hover:text-black"}`}>{lang === "es" ? "español" : "english"}</button>)}
+                        </div>
+                      </div>
+                  <ContentEditorSection number="01" title="equipo" description="cada imagen corresponde a una persona. las fotografías son compartidas por ambos idiomas.">
+                    <div className="grid gap-6 md:grid-cols-2">
+                      {([1, 2] as const).map((index) => {
+                        const key = `about_image_${index}` as "about_image_1" | "about_image_2";
+                        const current = siteContent[key];
+                        const name = index === 1 ? "Manuel Morera" : "Paulo Chavarría";
+                        return <div key={key} className="space-y-4 rounded-2xl border border-black/10 p-4">
+                          <p className="text-lg font-bold">{name}</p>
+                          <div className="relative overflow-hidden rounded-xl bg-neutral-100">
+                            <img src={current || (index === 1 ? "/generated/studio-project.svg" : "/generated/studio-visual.svg")} alt={`fotografía de ${name}`} className="aspect-[4/3] w-full object-cover" />
+                            {!current && <span className="absolute bottom-3 left-3 rounded-full bg-white/90 px-3 py-1 text-xs">imagen de referencia</span>}
+                          </div>
+                          <label className="block text-xs font-bold lowercase text-black/50">cambiar imagen
+                            <input type="file" accept="image/*" aria-label={`cambiar imagen de ${name}`} onChange={async (event) => {
+                              const file = event.target.files?.[0]; if (!file) return;
+                              try { setSiteContentMessage("subiendo imagen..."); const url = await uploadImage(file); setSiteContent((previous) => ({ ...previous, [key]: url })); setSiteContentMessage("imagen subida; pulsa guardar cambios para publicarla"); }
+                              catch (error) { setSiteContentMessage(error instanceof Error ? error.message : "no se pudo subir la imagen"); }
+                              event.target.value = "";
+                            }} className="mt-2 block w-full text-xs" />
+                          </label>
+                          <button type="button" disabled={!current} onClick={() => { setSiteContent((previous) => ({ ...previous, [key]: "" })); setSiteContentMessage("imagen retirada; pulsa guardar cambios para aplicar el cambio"); }} className="rounded-full border border-black/15 px-4 py-2 text-xs font-bold lowercase transition hover:bg-black hover:text-white disabled:cursor-not-allowed disabled:opacity-30">eliminar imagen</button>
+                          <p className="text-xs leading-5 text-black/40">al eliminarla, se mostrará la imagen de referencia hasta que subas otra. la otra fotografía no cambia.</p>
+                        </div>;
+                      })}
+                    </div>
+                  </ContentEditorSection>
+                  <ContentEditorSection number="02" title="textos de nosotros" description="edita el idioma seleccionado. los campos vacíos mantienen el texto predeterminado de la página.">
+                    {([ ["title", "título principal"], ["tagline", "frase principal"], ["intro", "introducción"], ["context", "contexto"], ["approach", "enfoque"], ["philosophy", "filosofía"], ["closing", "cierre"], ["lines", "título de líneas"], ["studio", "studio"], ["build", "construcción"], ["properties", "propiedades"], ["investments", "inversiones"], ["people", "título del equipo"], ["manuel", "cargo de Manuel"], ["paulo", "cargo de Paulo"], ["contact", "contacto"] ] as const).map(([key, label]) => {
+                      const field = `about_${key}_${editorLanguage}` as keyof typeof siteContent;
+                      return <CmsTextField key={field} label={label} value={siteContent[field]} onChange={(value) => setSiteContent((current) => ({ ...current, [field]: value }))} multiline={["intro", "context", "approach", "philosophy", "closing"].includes(key)} />;
+                    })}
+                  </ContentEditorSection>
+                  {siteContentMessage && <p role="status" className="rounded-2xl border border-black/10 bg-white px-5 py-4 text-sm font-bold lowercase text-black/55">{siteContentMessage}</p>}
+                  <div className="sticky bottom-6 z-40 flex justify-end"><div className="flex items-center gap-3 rounded-full bg-white/90 p-1.5 shadow-[0_14px_45px_rgba(0,0,0,0.12)] backdrop-blur-xl">
+                    <button type="button" onClick={() => setActiveSection("inicio")} className="rounded-full border border-black/10 bg-white px-6 py-3.5 text-xs font-bold lowercase text-black">← regresar</button>
+                    <button type="button" onClick={saveSiteContent} disabled={siteContentSaving} className="rounded-full bg-black px-7 py-3.5 text-xs font-bold lowercase text-white disabled:opacity-50">{siteContentSaving ? "guardando..." : "guardar cambios"}</button>
+                  </div></div>
+                </>}
               </div>
             )}
 

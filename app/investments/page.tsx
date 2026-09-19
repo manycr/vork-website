@@ -1,9 +1,13 @@
+import { cookies } from "next/headers";
 import { Header } from "@/components/Header";
 import { BackFloat } from "@/components/BackFloat";
 import { getPublishedItems } from "@/lib/cms";
 
 export default async function InvestmentsPage() {
   const items = await getPublishedItems("investment");
+
+  const lang = (await cookies()).get("vork_lang")?.value === "en" ? "en" : "es";
+  const en = lang === "en";
 
   return (
     <main className="min-h-screen bg-white text-[#101010]">
@@ -14,16 +18,15 @@ export default async function InvestmentsPage() {
           <div className="grid gap-10 lg:grid-cols-[1.35fr_.65fr] lg:items-end">
             <div>
               <h1 className="max-w-[1050px] text-[clamp(4.5rem,7.2vw,8rem)] font-normal lowercase leading-[.9] tracking-[-0.065em]">
-                oportunidades conceptuales para capital privado.
+                {en ? "conceptual opportunities for private capital." : "oportunidades conceptuales para capital privado."}
               </h1>
               <p className="mt-7 max-w-2xl text-[17px] leading-7 text-neutral-500">
-                inversiones con visión arquitectónica en mercados estratégicos.
+                {en ? "investments with an architectural vision in strategic markets." : "inversiones con visión arquitectónica en mercados estratégicos."}
               </p>
             </div>
 
             <p className="max-w-md text-[16px] leading-7 text-neutral-500 lg:pb-2">
-              seleccionamos y estructuramos oportunidades inmobiliarias con potencial de desarrollo,
-              diseño y rentabilidad a largo plazo.
+              {en ? "we select and structure real estate opportunities with potential for development, design and long-term returns." : "seleccionamos y estructuramos oportunidades inmobiliarias con potencial de desarrollo, diseño y rentabilidad a largo plazo."}
             </p>
           </div>
         </div>
@@ -72,7 +75,7 @@ export default async function InvestmentsPage() {
               ))}
             </div>
           ) : (
-            <p className="text-neutral-400">no hay oportunidades publicadas en este momento.</p>
+            <p className="text-neutral-400">{en ? "no opportunities published at the moment." : "no hay oportunidades publicadas en este momento."}</p>
           )}
         </div>
       </section>

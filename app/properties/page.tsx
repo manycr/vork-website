@@ -1,9 +1,13 @@
+import { cookies } from "next/headers";
 import { Header } from "@/components/Header";
 import { BackFloat } from "@/components/BackFloat";
 import { getPublishedItems } from "@/lib/cms";
 
 export default async function PropertiesPage() {
   const properties = await getPublishedItems("property");
+
+  const lang = (await cookies()).get("vork_lang")?.value === "en" ? "en" : "es";
+  const en = lang === "en";
 
   return (
     <main className="min-h-screen bg-white text-[#101010]">
@@ -12,10 +16,10 @@ export default async function PropertiesPage() {
       <section className="px-[7vw] pb-14 pt-28 md:pb-18 md:pt-32">
         <div className="mx-auto max-w-[1500px]">
           <h1 className="max-w-[900px] text-[clamp(4.5rem,7.2vw,8rem)] font-normal lowercase leading-[.92] tracking-[-0.065em]">
-            propiedades.
+            {en ? "properties." : "propiedades."}
           </h1>
           <p className="mt-6 max-w-xl text-[16px] leading-7 text-neutral-500">
-            selección de propiedades y oportunidades con criterio arquitectónico.
+            {en ? "a selection of properties and opportunities informed by architectural thinking." : "selección de propiedades y oportunidades con criterio arquitectónico."}
           </p>
         </div>
       </section>
@@ -52,7 +56,7 @@ export default async function PropertiesPage() {
               ))}
             </div>
           ) : (
-            <p className="text-neutral-400">no hay propiedades publicadas en este momento.</p>
+            <p className="text-neutral-400">{en ? "no properties published at the moment." : "no hay propiedades publicadas en este momento."}</p>
           )}
         </div>
       </section>
