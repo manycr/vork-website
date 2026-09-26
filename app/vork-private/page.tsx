@@ -1531,11 +1531,27 @@ async function enterDashboard() {
                     )}
                     <button type="button" onClick={addAboutTeamMember} className="mt-8 rounded-full bg-black px-5 py-3 text-xs font-bold lowercase text-white transition hover:bg-[#303030]">+ agregar persona al equipo</button>
                   </ContentEditorSection>
-                  <ContentEditorSection number="02" title="textos de nosotros" description="edita el idioma seleccionado. los campos vacíos mantienen el texto predeterminado de la página.">
-                    {([ ["title", "título principal"], ["tagline", "frase principal"], ["intro", "introducción"], ["context", "contexto"], ["approach", "enfoque"], ["philosophy", "filosofía"], ["closing", "cierre"], ["lines", "título de líneas"], ["studio", "studio"], ["build", "construcción"], ["properties", "propiedades"], ["investments", "inversiones"], ["people", "título del equipo"], ["contact", "contacto"] ] as const).map(([key, label]) => {
-                      const field = `about_${key}_${editorLanguage}` as keyof typeof siteContent;
-                      return <CmsTextField key={field} label={label} value={siteContent[field]} onChange={(value) => setSiteContent((current) => ({ ...current, [field]: value }))} multiline={["intro", "context", "approach", "philosophy", "closing"].includes(key)} />;
-                    })}
+                  <ContentEditorSection number="02" title="textos de nosotros" description="los bloques siguen exactamente el orden de la página pública, de arriba hacia abajo.">
+                    {([
+                      { title: "1. encabezado", description: "lo primero que aparece al abrir nosotros.", fields: [["title", "título principal"], ["tagline", "frase principal"]] },
+                      { title: "2. historia y enfoque", description: "los dos párrafos centrales, leídos de izquierda a derecha.", fields: [["intro", "párrafo izquierdo · introducción"], ["context", "párrafo izquierdo · continuación"], ["approach", "párrafo derecho · enfoque"], ["philosophy", "párrafo derecho · filosofía"]] },
+                      { title: "3. cierre de la historia", description: "la frase grande que termina la introducción.", fields: [["closing", "frase de cierre"]] },
+                      { title: "4. líneas de negocio", description: "título de la sección y descripción de cada línea.", fields: [["lines", "título de la sección"], ["studio", "studio"], ["build", "construcción"], ["properties", "propiedades"], ["investments", "inversiones"]] },
+                      { title: "5. equipo y contacto", description: "título que aparece antes de las personas y llamada final.", fields: [["people", "título del equipo"], ["contact", "llamada de contacto"]] },
+                    ] as const).map((group) => (
+                      <div key={group.title} className="rounded-2xl border border-black/10 bg-[#fafafa] p-5 md:p-6">
+                        <div className="mb-5 border-b border-black/10 pb-4">
+                          <p className="text-sm font-black lowercase">{group.title}</p>
+                          <p className="mt-1 text-xs leading-5 text-black/45">{group.description}</p>
+                        </div>
+                        <div className="grid gap-5">
+                          {group.fields.map(([key, label]) => {
+                            const field = `about_${key}_${editorLanguage}` as keyof typeof siteContent;
+                            return <CmsTextField key={field} label={label} value={siteContent[field]} onChange={(value) => setSiteContent((current) => ({ ...current, [field]: value }))} multiline={["intro", "context", "approach", "philosophy", "closing"].includes(key)} />;
+                          })}
+                        </div>
+                      </div>
+                    ))}
                   </ContentEditorSection>
                   {siteContentMessage && <p role="status" className="rounded-2xl border border-black/10 bg-white px-5 py-4 text-sm font-bold lowercase text-black/55">{siteContentMessage}</p>}
                   <div className="sticky bottom-6 z-40 flex justify-end"><div className="flex items-center gap-3 rounded-full bg-white/90 p-1.5 shadow-[0_14px_45px_rgba(0,0,0,0.12)] backdrop-blur-xl">
