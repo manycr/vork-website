@@ -276,6 +276,10 @@ const [visualForm, setVisualForm] = useState(emptyVisualForm);
 const defaultSiteContent = {
   about_image_1: "",
   about_image_2: "",
+  about_photo_height_manuel: "380",
+  about_photo_position_manuel: "50",
+  about_photo_height_paulo: "380",
+  about_photo_position_paulo: "50",
   about_show_manuel: "true",
   about_show_paulo: "true",
   about_name_manuel_es: "",
@@ -1463,6 +1467,8 @@ async function enterDashboard() {
                         const person = index === 1 ? "manuel" : "paulo";
                         const imageKey = `about_image_${index}` as "about_image_1" | "about_image_2";
                         const showKey = `about_show_${person}` as "about_show_manuel" | "about_show_paulo";
+                        const heightKey = `about_photo_height_${person}` as "about_photo_height_manuel" | "about_photo_height_paulo";
+                        const positionKey = `about_photo_position_${person}` as "about_photo_position_manuel" | "about_photo_position_paulo";
                         const nameKey = `about_name_${person}_${editorLanguage}` as keyof typeof siteContent;
                         const roleKey = `about_${person}_${editorLanguage}` as keyof typeof siteContent;
                         const bioKey = `about_bio_${person}_${editorLanguage}` as keyof typeof siteContent;
@@ -1483,7 +1489,7 @@ async function enterDashboard() {
                           <CmsTextField label={editorLanguage === "es" ? "cargo" : "role"} value={siteContent[roleKey]} onChange={(value) => setSiteContent((previous) => ({ ...previous, [roleKey]: value }))} />
                           <CmsTextField label={editorLanguage === "es" ? "biografía breve" : "short biography"} value={siteContent[bioKey]} onChange={(value) => setSiteContent((previous) => ({ ...previous, [bioKey]: value }))} multiline />
                           <div className="relative overflow-hidden rounded-xl bg-neutral-100">
-                            <img src={current || (index === 1 ? "/generated/studio-project.svg" : "/generated/studio-visual.svg")} alt={`fotografía de ${displayName}`} className="aspect-[4/3] w-full object-cover" />
+                            <img src={current || (index === 1 ? "/generated/studio-project.svg" : "/generated/studio-visual.svg")} alt={`fotografía de ${displayName}`} className="w-full object-cover" style={{ height: `${Math.min(700, Math.max(250, Number(siteContent[heightKey]) || 380))}px`, objectPosition: `center ${Math.min(100, Math.max(0, Number(siteContent[positionKey]) || 50))}%` }} />
                             {!current && <span className="absolute bottom-3 left-3 rounded-full bg-white/90 px-3 py-1 text-xs">imagen de referencia</span>}
                           </div>
                           <label className="block text-xs font-bold lowercase text-black/50">cambiar imagen
@@ -1495,6 +1501,14 @@ async function enterDashboard() {
                             }} className="mt-2 block w-full text-xs" />
                           </label>
                           <button type="button" disabled={!current} onClick={() => { setSiteContent((previous) => ({ ...previous, [imageKey]: "" })); setSiteContentMessage("imagen retirada; pulsa guardar cambios para aplicar el cambio"); }} className="rounded-full border border-black/15 px-4 py-2 text-xs font-bold lowercase transition hover:bg-black hover:text-white disabled:cursor-not-allowed disabled:opacity-30">eliminar imagen</button>
+                          <div className="grid gap-4 rounded-2xl bg-[#fafafa] p-4 sm:grid-cols-2">
+                            <label className="text-xs font-bold lowercase text-black/50">tamaño de imagen <span className="float-right text-black/35">{siteContent[heightKey] || "380"} px</span>
+                              <input type="range" min="250" max="700" step="10" value={siteContent[heightKey] || "380"} onChange={(event) => setSiteContent((previous) => ({ ...previous, [heightKey]: event.target.value }))} className="mt-3 w-full accent-black" />
+                            </label>
+                            <label className="text-xs font-bold lowercase text-black/50">posición vertical <span className="float-right text-black/35">{siteContent[positionKey] || "50"}%</span>
+                              <input type="range" min="0" max="100" step="1" value={siteContent[positionKey] || "50"} onChange={(event) => setSiteContent((previous) => ({ ...previous, [positionKey]: event.target.value }))} className="mt-3 w-full accent-black" />
+                            </label>
+                          </div>
                         </div>;
                       })}
                     </div>
@@ -1514,7 +1528,7 @@ async function enterDashboard() {
                             <CmsTextField label={editorLanguage === "es" ? "cargo" : "role"} value={member[roleField] || ""} onChange={(value) => updateAboutTeamMember(member.id, roleField, value)} />
                             <CmsTextField label={editorLanguage === "es" ? "biografía breve" : "short biography"} value={member[bioField] || ""} onChange={(value) => updateAboutTeamMember(member.id, bioField, value)} multiline />
                             <div className="relative overflow-hidden rounded-xl bg-neutral-100">
-                              {member.image ? <img src={member.image} alt={`fotografía de ${displayName}`} className="aspect-[4/3] w-full object-cover" /> : <div className="flex aspect-[4/3] items-center justify-center text-sm text-black/35">sin fotografía</div>}
+                              {member.image ? <img src={member.image} alt={`fotografía de ${displayName}`} className="w-full object-cover" style={{ height: `${Math.min(700, Math.max(250, Number(member.photo_height) || 380))}px`, objectPosition: `center ${Math.min(100, Math.max(0, Number(member.photo_position) || 50))}%` }} /> : <div className="flex items-center justify-center text-sm text-black/35" style={{ height: `${Math.min(700, Math.max(250, Number(member.photo_height) || 380))}px` }}>sin fotografía</div>}
                             </div>
                             <label className="block text-xs font-bold lowercase text-black/50">cambiar imagen
                               <input type="file" accept="image/*" aria-label={`cambiar imagen de ${displayName}`} onChange={async (event) => {
@@ -1525,6 +1539,14 @@ async function enterDashboard() {
                               }} className="mt-2 block w-full text-xs" />
                             </label>
                             <button type="button" disabled={!member.image} onClick={() => updateAboutTeamMember(member.id, "image", "")} className="rounded-full border border-black/15 px-4 py-2 text-xs font-bold lowercase transition hover:bg-black hover:text-white disabled:cursor-not-allowed disabled:opacity-30">eliminar imagen</button>
+                            <div className="grid gap-4 rounded-2xl bg-[#fafafa] p-4 sm:grid-cols-2">
+                              <label className="text-xs font-bold lowercase text-black/50">tamaño de imagen <span className="float-right text-black/35">{member.photo_height || "380"} px</span>
+                                <input type="range" min="250" max="700" step="10" value={member.photo_height || "380"} onChange={(event) => updateAboutTeamMember(member.id, "photo_height", event.target.value)} className="mt-3 w-full accent-black" />
+                              </label>
+                              <label className="text-xs font-bold lowercase text-black/50">posición vertical <span className="float-right text-black/35">{member.photo_position || "50"}%</span>
+                                <input type="range" min="0" max="100" step="1" value={member.photo_position || "50"} onChange={(event) => updateAboutTeamMember(member.id, "photo_position", event.target.value)} className="mt-3 w-full accent-black" />
+                              </label>
+                            </div>
                           </div>;
                         })}
                       </div>
