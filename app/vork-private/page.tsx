@@ -20,6 +20,8 @@ type AboutTeamMember = {
   name_en: string;
   role_es: string;
   role_en: string;
+  bio_es: string;
+  bio_en: string;
   image: string;
   photo_height?: string;
   photo_position?: string;
@@ -274,6 +276,16 @@ const [visualForm, setVisualForm] = useState(emptyVisualForm);
 const defaultSiteContent = {
   about_image_1: "",
   about_image_2: "",
+  about_show_manuel: "true",
+  about_show_paulo: "true",
+  about_name_manuel_es: "",
+  about_name_manuel_en: "",
+  about_name_paulo_es: "",
+  about_name_paulo_en: "",
+  about_bio_manuel_es: "",
+  about_bio_manuel_en: "",
+  about_bio_paulo_es: "",
+  about_bio_paulo_en: "",
   about_team: "[]",
   about_title_es: "",
   about_tagline_es: "",
@@ -480,7 +492,7 @@ function updateAboutTeamMember(id: string, field: keyof AboutTeamMember, value: 
 function addAboutTeamMember() {
   setAboutTeam([
     ...readAboutTeam(),
-    { id: `member-${Date.now()}`, name_es: "", name_en: "", role_es: "", role_en: "", image: "", photo_height: "380", photo_position: "50" },
+    { id: `member-${Date.now()}`, name_es: "", name_en: "", role_es: "", role_en: "", bio_es: "", bio_en: "", image: "", photo_height: "380", photo_position: "50" },
   ]);
   setSiteContentMessage("persona agregada; completa sus datos y guarda los cambios");
 }
@@ -1445,28 +1457,44 @@ async function enterDashboard() {
                           {(["es", "en"] as const).map((lang) => <button key={lang} type="button" aria-pressed={editorLanguage === lang} onClick={() => setEditorLanguage(lang)} className={`rounded-full px-5 py-2 text-xs font-bold transition ${editorLanguage === lang ? "bg-black text-white" : "text-black/50 hover:text-black"}`}>{lang === "es" ? "español" : "english"}</button>)}
                         </div>
                       </div>
-                  <ContentEditorSection number="01" title="equipo" description="cada imagen corresponde a una persona. las fotografías son compartidas por ambos idiomas.">
+                  <ContentEditorSection number="01" title="equipo" description="edita nombre, cargo, biografía y fotografía de cada persona en el idioma seleccionado.">
                     <div className="grid gap-6 md:grid-cols-2">
                       {([1, 2] as const).map((index) => {
-                        const key = `about_image_${index}` as "about_image_1" | "about_image_2";
-                        const current = siteContent[key];
-                        const name = index === 1 ? "Manuel Morera" : "Paulo Chavarría";
-                        return <div key={key} className="space-y-4 rounded-2xl border border-black/10 p-4">
-                          <p className="text-lg font-bold">{name}</p>
+                        const person = index === 1 ? "manuel" : "paulo";
+                        const imageKey = `about_image_${index}` as "about_image_1" | "about_image_2";
+                        const showKey = `about_show_${person}` as "about_show_manuel" | "about_show_paulo";
+                        const nameKey = `about_name_${person}_${editorLanguage}` as keyof typeof siteContent;
+                        const roleKey = `about_${person}_${editorLanguage}` as keyof typeof siteContent;
+                        const bioKey = `about_bio_${person}_${editorLanguage}` as keyof typeof siteContent;
+                        const fallbackName = person === "manuel" ? "Manuel Morera" : "Paulo Chavarría";
+                        const displayName = siteContent[nameKey] || fallbackName;
+                        const current = siteContent[imageKey];
+                        const visible = siteContent[showKey] !== "false";
+                        if (!visible) return <div key={person} className="flex items-center justify-between gap-4 rounded-2xl border border-dashed border-black/15 bg-[#fafafa] p-5">
+                          <div><p className="font-bold">{displayName}</p><p className="mt-1 text-xs text-black/40">persona eliminada del sitio</p></div>
+                          <button type="button" onClick={() => { setSiteContent((previous) => ({ ...previous, [showKey]: "true" })); setSiteContentMessage("persona restaurada; pulsa guardar cambios para publicarla"); }} className="rounded-full border border-black/15 px-4 py-2 text-xs font-bold lowercase transition hover:bg-black hover:text-white">restaurar persona</button>
+                        </div>;
+                        return <div key={person} className="space-y-4 rounded-2xl border border-black/10 p-4">
+                          <div className="flex items-center justify-between gap-4">
+                            <p className="text-lg font-bold">{displayName}</p>
+                            <button type="button" onClick={() => { setSiteContent((previous) => ({ ...previous, [showKey]: "false" })); setSiteContentMessage("persona eliminada; pulsa guardar cambios para aplicar el cambio"); }} className="rounded-full border border-red-200 px-3 py-1.5 text-xs font-bold lowercase text-red-700 transition hover:bg-red-700 hover:text-white">eliminar persona</button>
+                          </div>
+                          <CmsTextField label={editorLanguage === "es" ? "nombre" : "name"} value={siteContent[nameKey]} onChange={(value) => setSiteContent((previous) => ({ ...previous, [nameKey]: value }))} />
+                          <CmsTextField label={editorLanguage === "es" ? "cargo" : "role"} value={siteContent[roleKey]} onChange={(value) => setSiteContent((previous) => ({ ...previous, [roleKey]: value }))} />
+                          <CmsTextField label={editorLanguage === "es" ? "biografía breve" : "short biography"} value={siteContent[bioKey]} onChange={(value) => setSiteContent((previous) => ({ ...previous, [bioKey]: value }))} multiline />
                           <div className="relative overflow-hidden rounded-xl bg-neutral-100">
-                            <img src={current || (index === 1 ? "/generated/studio-project.svg" : "/generated/studio-visual.svg")} alt={`fotografía de ${name}`} className="aspect-[4/3] w-full object-cover" />
+                            <img src={current || (index === 1 ? "/generated/studio-project.svg" : "/generated/studio-visual.svg")} alt={`fotografía de ${displayName}`} className="aspect-[4/3] w-full object-cover" />
                             {!current && <span className="absolute bottom-3 left-3 rounded-full bg-white/90 px-3 py-1 text-xs">imagen de referencia</span>}
                           </div>
                           <label className="block text-xs font-bold lowercase text-black/50">cambiar imagen
-                            <input type="file" accept="image/*" aria-label={`cambiar imagen de ${name}`} onChange={async (event) => {
+                            <input type="file" accept="image/*" aria-label={`cambiar imagen de ${displayName}`} onChange={async (event) => {
                               const file = event.target.files?.[0]; if (!file) return;
-                              try { setSiteContentMessage("subiendo imagen..."); const url = await uploadImage(file); setSiteContent((previous) => ({ ...previous, [key]: url })); setSiteContentMessage("imagen subida; pulsa guardar cambios para publicarla"); }
+                              try { setSiteContentMessage("subiendo imagen..."); const url = await uploadImage(file); setSiteContent((previous) => ({ ...previous, [imageKey]: url })); setSiteContentMessage("imagen subida; pulsa guardar cambios para publicarla"); }
                               catch (error) { setSiteContentMessage(error instanceof Error ? error.message : "no se pudo subir la imagen"); }
                               event.target.value = "";
                             }} className="mt-2 block w-full text-xs" />
                           </label>
-                          <button type="button" disabled={!current} onClick={() => { setSiteContent((previous) => ({ ...previous, [key]: "" })); setSiteContentMessage("imagen retirada; pulsa guardar cambios para aplicar el cambio"); }} className="rounded-full border border-black/15 px-4 py-2 text-xs font-bold lowercase transition hover:bg-black hover:text-white disabled:cursor-not-allowed disabled:opacity-30">eliminar imagen</button>
-                          <p className="text-xs leading-5 text-black/40">al eliminarla, se mostrará la imagen de referencia hasta que subas otra. la otra fotografía no cambia.</p>
+                          <button type="button" disabled={!current} onClick={() => { setSiteContent((previous) => ({ ...previous, [imageKey]: "" })); setSiteContentMessage("imagen retirada; pulsa guardar cambios para aplicar el cambio"); }} className="rounded-full border border-black/15 px-4 py-2 text-xs font-bold lowercase transition hover:bg-black hover:text-white disabled:cursor-not-allowed disabled:opacity-30">eliminar imagen</button>
                         </div>;
                       })}
                     </div>
@@ -1475,6 +1503,7 @@ async function enterDashboard() {
                         {readAboutTeam().map((member) => {
                           const nameField = `name_${editorLanguage}` as "name_es" | "name_en";
                           const roleField = `role_${editorLanguage}` as "role_es" | "role_en";
+                          const bioField = `bio_${editorLanguage}` as "bio_es" | "bio_en";
                           const displayName = member[nameField] || member.name_es || "nueva persona";
                           return <div key={member.id} className="space-y-4 rounded-2xl border border-black/10 p-4">
                             <div className="flex items-center justify-between gap-4">
@@ -1483,6 +1512,7 @@ async function enterDashboard() {
                             </div>
                             <CmsTextField label={editorLanguage === "es" ? "nombre" : "name"} value={member[nameField] || ""} onChange={(value) => updateAboutTeamMember(member.id, nameField, value)} />
                             <CmsTextField label={editorLanguage === "es" ? "cargo" : "role"} value={member[roleField] || ""} onChange={(value) => updateAboutTeamMember(member.id, roleField, value)} />
+                            <CmsTextField label={editorLanguage === "es" ? "biografía breve" : "short biography"} value={member[bioField] || ""} onChange={(value) => updateAboutTeamMember(member.id, bioField, value)} multiline />
                             <div className="relative overflow-hidden rounded-xl bg-neutral-100">
                               {member.image ? <img src={member.image} alt={`fotografía de ${displayName}`} className="aspect-[4/3] w-full object-cover" /> : <div className="flex aspect-[4/3] items-center justify-center text-sm text-black/35">sin fotografía</div>}
                             </div>
@@ -1502,7 +1532,7 @@ async function enterDashboard() {
                     <button type="button" onClick={addAboutTeamMember} className="mt-8 rounded-full bg-black px-5 py-3 text-xs font-bold lowercase text-white transition hover:bg-[#303030]">+ agregar persona al equipo</button>
                   </ContentEditorSection>
                   <ContentEditorSection number="02" title="textos de nosotros" description="edita el idioma seleccionado. los campos vacíos mantienen el texto predeterminado de la página.">
-                    {([ ["title", "título principal"], ["tagline", "frase principal"], ["intro", "introducción"], ["context", "contexto"], ["approach", "enfoque"], ["philosophy", "filosofía"], ["closing", "cierre"], ["lines", "título de líneas"], ["studio", "studio"], ["build", "construcción"], ["properties", "propiedades"], ["investments", "inversiones"], ["people", "título del equipo"], ["manuel", "cargo de Manuel"], ["paulo", "cargo de Paulo"], ["contact", "contacto"] ] as const).map(([key, label]) => {
+                    {([ ["title", "título principal"], ["tagline", "frase principal"], ["intro", "introducción"], ["context", "contexto"], ["approach", "enfoque"], ["philosophy", "filosofía"], ["closing", "cierre"], ["lines", "título de líneas"], ["studio", "studio"], ["build", "construcción"], ["properties", "propiedades"], ["investments", "inversiones"], ["people", "título del equipo"], ["contact", "contacto"] ] as const).map(([key, label]) => {
                       const field = `about_${key}_${editorLanguage}` as keyof typeof siteContent;
                       return <CmsTextField key={field} label={label} value={siteContent[field]} onChange={(value) => setSiteContent((current) => ({ ...current, [field]: value }))} multiline={["intro", "context", "approach", "philosophy", "closing"].includes(key)} />;
                     })}
