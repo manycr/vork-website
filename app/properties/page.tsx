@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { Header } from "@/components/Header";
 import { BackFloat } from "@/components/BackFloat";
 import { getPublishedItems } from "@/lib/cms";
+import { localizePath } from "@/lib/i18nRoutes";
 
 export default async function PropertiesPage() {
   const properties = await getPublishedItems("property");
@@ -31,7 +32,7 @@ export default async function PropertiesPage() {
               {properties.map((item: any) => (
                 <a
                   key={item.id || item.slug}
-                  href={`${en ? "/en" : ""}/properties/${item.slug}`}
+                  href={localizePath(`/properties/${item.slug}`, lang)}
                   className="group block"
                 >
                   <div className="aspect-[4/3] overflow-hidden rounded-[22px] bg-neutral-100">

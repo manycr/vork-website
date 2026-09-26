@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import { localizePath } from "@/lib/i18nRoutes";
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -14,10 +15,13 @@ export function Header() {
   }, [pathname]);
 
   const changeLanguage = (next: "es" | "en") => {
-    const withoutEnglishPrefix = pathname === "/en" ? "/" : pathname.replace(/^\/en(?=\/)/, "");
-    const destination = next === "en"
-      ? `/en${withoutEnglishPrefix === "/" ? "" : withoutEnglishPrefix}`
-      : withoutEnglishPrefix;
+    const englishInternal = pathname === "/en" ? "/" : pathname.replace(/^\/en(?=\/)/, "");
+    const spanishInternal = pathname.startsWith("/en") ? englishInternal : (() => {
+      const pairs: Array<[string, string]> = [["/studio/proyectos", "/studio/projects"], ["/studio/visualizaciones", "/studio/visuals"], ["/inversiones", "/investments"], ["/propiedades", "/properties"], ["/diagnostico", "/briefing"], ["/construccion", "/build"], ["/nosotros", "/about"]];
+      const match = pairs.find(([publicPath]) => pathname === publicPath || pathname.startsWith(`${publicPath}/`));
+      return match ? pathname.replace(match[0], match[1]) : pathname;
+    })();
+    const destination = localizePath(spanishInternal, next);
     window.location.assign(`${destination}${window.location.hash}`);
   };
 
@@ -37,8 +41,7 @@ export function Header() {
     return () => window.removeEventListener("keydown", closeOnEscape);
   }, [menuOpen]);
 
-  const prefix = language === "en" ? "/en" : "";
-  const localize = (href: string) => `${prefix}${href === "/" ? "" : href}` || "/";
+  const localize = (href: string) => localizePath(href, language);
   const links = [
     { href: "/studio", label: "studio" },
     { href: "/investments", label: language === "es" ? "inversiones" : "investments" },

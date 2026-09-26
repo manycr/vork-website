@@ -1,6 +1,7 @@
 import { Header } from "@/components/Header";
 import { Estimator } from "@/components/Estimator";
 import { cookies } from "next/headers";
+import { localizePath } from "@/lib/i18nRoutes";
 
 export default async function BriefingPage() {
   const en = (await cookies()).get("vork_lang")?.value === "en";
@@ -10,7 +11,7 @@ export default async function BriefingPage() {
 
       <section className="px-[7vw] pb-14 pt-20 md:pb-20 md:pt-28">
         <div className="mx-auto max-w-[1500px]">
-          <a href={en ? "/en" : "/"} className="inline-flex text-sm lowercase text-neutral-400 transition hover:text-black">
+          <a href={localizePath("/", en ? "en" : "es")} className="inline-flex text-sm lowercase text-neutral-400 transition hover:text-black">
             ← volver
           </a>
 

@@ -4,6 +4,7 @@ import { getItemBySlug } from "@/lib/cms";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
+import { localizePath } from "@/lib/i18nRoutes";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -11,12 +12,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!item || item.type !== "property") return {};
   const en = (await cookies()).get("vork_lang")?.value === "en";
   const path = `/properties/${slug}`;
+  const esPath = localizePath(path, "es");
   const description = item.summary || item.description || `Propiedad ${item.title} presentada por vork studio.`;
   return {
     title: item.title,
     description,
-    alternates: { canonical: en ? `/en${path}` : path, languages: { "es-CR": path, en: `/en${path}`, "x-default": path } },
-    openGraph: { title: `${item.title} | vork studio`, description, url: en ? `/en${path}` : path, images: item.cover_image ? [{ url: item.cover_image, alt: item.title }] : [] },
+    alternates: { canonical: en ? `/en${path}` : esPath, languages: { "es-CR": esPath, en: `/en${path}`, "x-default": esPath } },
+    openGraph: { title: `${item.title} | vork studio`, description, url: en ? `/en${path}` : esPath, images: item.cover_image ? [{ url: item.cover_image, alt: item.title }] : [] },
   };
 }
 

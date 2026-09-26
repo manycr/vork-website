@@ -14,6 +14,17 @@ type Section =
   | "construccion"
   | "leads";
 
+type AboutTeamMember = {
+  id: string;
+  name_es: string;
+  name_en: string;
+  role_es: string;
+  role_en: string;
+  image: string;
+  photo_height?: string;
+  photo_position?: string;
+};
+
 const sections: { id: Section; label: string; description: string }[] = [
   {
     id: "inicio",
@@ -263,6 +274,7 @@ const [visualForm, setVisualForm] = useState(emptyVisualForm);
 const defaultSiteContent = {
   about_image_1: "",
   about_image_2: "",
+  about_team: "[]",
   about_title_es: "",
   about_tagline_es: "",
   about_intro_es: "",
@@ -446,6 +458,36 @@ function homeText(key: string): string {
 function setHomeText(key: string, value: string) {
   const actualKey = editorLanguage === "en" ? `${key}_en` : key;
   setSiteContent((current) => ({ ...current, [actualKey]: value }));
+}
+
+function readAboutTeam(): AboutTeamMember[] {
+  try {
+    const parsed = JSON.parse(siteContent.about_team || "[]");
+    return Array.isArray(parsed) ? parsed.filter((member) => member && typeof member.id === "string") : [];
+  } catch {
+    return [];
+  }
+}
+
+function setAboutTeam(members: AboutTeamMember[]) {
+  setSiteContent((current) => ({ ...current, about_team: JSON.stringify(members) }));
+}
+
+function updateAboutTeamMember(id: string, field: keyof AboutTeamMember, value: string) {
+  setAboutTeam(readAboutTeam().map((member) => member.id === id ? { ...member, [field]: value } : member));
+}
+
+function addAboutTeamMember() {
+  setAboutTeam([
+    ...readAboutTeam(),
+    { id: `member-${Date.now()}`, name_es: "", name_en: "", role_es: "", role_en: "", image: "", photo_height: "380", photo_position: "50" },
+  ]);
+  setSiteContentMessage("persona agregada; completa sus datos y guarda los cambios");
+}
+
+function removeAboutTeamMember(id: string) {
+  setAboutTeam(readAboutTeam().filter((member) => member.id !== id));
+  setSiteContentMessage("persona eliminada; pulsa guardar cambios para aplicar el cambio");
 }
 
 function resetVisualForm() {
@@ -1428,6 +1470,36 @@ async function enterDashboard() {
                         </div>;
                       })}
                     </div>
+                    {readAboutTeam().length > 0 && (
+                      <div className="mt-8 grid gap-6 md:grid-cols-2">
+                        {readAboutTeam().map((member) => {
+                          const nameField = `name_${editorLanguage}` as "name_es" | "name_en";
+                          const roleField = `role_${editorLanguage}` as "role_es" | "role_en";
+                          const displayName = member[nameField] || member.name_es || "nueva persona";
+                          return <div key={member.id} className="space-y-4 rounded-2xl border border-black/10 p-4">
+                            <div className="flex items-center justify-between gap-4">
+                              <p className="text-lg font-bold">{displayName}</p>
+                              <button type="button" onClick={() => removeAboutTeamMember(member.id)} className="rounded-full border border-red-200 px-3 py-1.5 text-xs font-bold lowercase text-red-700 transition hover:bg-red-700 hover:text-white">eliminar persona</button>
+                            </div>
+                            <CmsTextField label={editorLanguage === "es" ? "nombre" : "name"} value={member[nameField] || ""} onChange={(value) => updateAboutTeamMember(member.id, nameField, value)} />
+                            <CmsTextField label={editorLanguage === "es" ? "cargo" : "role"} value={member[roleField] || ""} onChange={(value) => updateAboutTeamMember(member.id, roleField, value)} />
+                            <div className="relative overflow-hidden rounded-xl bg-neutral-100">
+                              {member.image ? <img src={member.image} alt={`fotografía de ${displayName}`} className="aspect-[4/3] w-full object-cover" /> : <div className="flex aspect-[4/3] items-center justify-center text-sm text-black/35">sin fotografía</div>}
+                            </div>
+                            <label className="block text-xs font-bold lowercase text-black/50">cambiar imagen
+                              <input type="file" accept="image/*" aria-label={`cambiar imagen de ${displayName}`} onChange={async (event) => {
+                                const file = event.target.files?.[0]; if (!file) return;
+                                try { setSiteContentMessage("subiendo imagen..."); const url = await uploadImage(file); updateAboutTeamMember(member.id, "image", url); setSiteContentMessage("imagen subida; pulsa guardar cambios para publicarla"); }
+                                catch (error) { setSiteContentMessage(error instanceof Error ? error.message : "no se pudo subir la imagen"); }
+                                event.target.value = "";
+                              }} className="mt-2 block w-full text-xs" />
+                            </label>
+                            <button type="button" disabled={!member.image} onClick={() => updateAboutTeamMember(member.id, "image", "")} className="rounded-full border border-black/15 px-4 py-2 text-xs font-bold lowercase transition hover:bg-black hover:text-white disabled:cursor-not-allowed disabled:opacity-30">eliminar imagen</button>
+                          </div>;
+                        })}
+                      </div>
+                    )}
+                    <button type="button" onClick={addAboutTeamMember} className="mt-8 rounded-full bg-black px-5 py-3 text-xs font-bold lowercase text-white transition hover:bg-[#303030]">+ agregar persona al equipo</button>
                   </ContentEditorSection>
                   <ContentEditorSection number="02" title="textos de nosotros" description="edita el idioma seleccionado. los campos vacíos mantienen el texto predeterminado de la página.">
                     {([ ["title", "título principal"], ["tagline", "frase principal"], ["intro", "introducción"], ["context", "contexto"], ["approach", "enfoque"], ["philosophy", "filosofía"], ["closing", "cierre"], ["lines", "título de líneas"], ["studio", "studio"], ["build", "construcción"], ["properties", "propiedades"], ["investments", "inversiones"], ["people", "título del equipo"], ["manuel", "cargo de Manuel"], ["paulo", "cargo de Paulo"], ["contact", "contacto"] ] as const).map(([key, label]) => {

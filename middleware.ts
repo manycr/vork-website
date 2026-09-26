@@ -1,9 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
+import { internalPathFromSpanish, isLegacyEnglishPath, localizePath } from "@/lib/i18nRoutes";
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const isEnglish = pathname === "/en" || pathname.startsWith("/en/");
   const desiredLanguage = isEnglish ? "en" : "es";
+
+  if (!isEnglish && isLegacyEnglishPath(pathname)) {
+    const redirected = request.nextUrl.clone();
+    redirected.pathname = localizePath(pathname, "es");
+    return NextResponse.redirect(redirected, 308);
+  }
 
   if (request.cookies.get("vork_lang")?.value !== desiredLanguage) {
     const response = NextResponse.redirect(request.nextUrl);
@@ -18,6 +25,13 @@ export function middleware(request: NextRequest) {
   if (isEnglish) {
     const rewritten = request.nextUrl.clone();
     rewritten.pathname = pathname.slice(3) || "/";
+    return NextResponse.rewrite(rewritten);
+  }
+
+  const internalPath = internalPathFromSpanish(pathname);
+  if (internalPath !== pathname) {
+    const rewritten = request.nextUrl.clone();
+    rewritten.pathname = internalPath;
     return NextResponse.rewrite(rewritten);
   }
 

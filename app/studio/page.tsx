@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { Header } from "@/components/Header";
 import { BackFloat } from "@/components/BackFloat";
 import { getPublishedItems } from "@/lib/cms";
+import { localizePath } from "@/lib/i18nRoutes";
 
 export default async function StudioPage() {
   const [projects, visuals] = await Promise.all([
@@ -31,7 +32,7 @@ export default async function StudioPage() {
         <div className="mx-auto max-w-[1500px]">
           <div className="grid gap-x-6 gap-y-14 md:grid-cols-2 lg:grid-cols-3">
             {projects.map((item: any) => (
-              <a key={item.id || item.slug} href={`${en ? "/en" : ""}/studio/projects/${item.slug}`} className="group block">
+              <a key={item.id || item.slug} href={localizePath(`/studio/projects/${item.slug}`, lang)} className="group block">
                 <div className="aspect-[4/3] overflow-hidden rounded-[22px] bg-neutral-100">
                   <img
                     src={item.cover_image}
