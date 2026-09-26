@@ -31,7 +31,7 @@ export default async function StudioPage() {
         <div className="mx-auto max-w-[1500px]">
           <div className="grid gap-x-6 gap-y-14 md:grid-cols-2 lg:grid-cols-3">
             {projects.map((item: any) => (
-              <a key={item.id || item.slug} href={`/studio/projects/${item.slug}`} className="group block">
+              <a key={item.id || item.slug} href={`${en ? "/en" : ""}/studio/projects/${item.slug}`} className="group block">
                 <div className="aspect-[4/3] overflow-hidden rounded-[22px] bg-neutral-100">
                   <img
                     src={item.cover_image}

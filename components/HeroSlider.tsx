@@ -103,7 +103,7 @@ export function HeroSlider({
                 {primaryButton}
               </a>
               <a
-                href="/studio"
+                href={language === "en" ? "/en/studio" : "/studio"}
                 className="text-[14px] lowercase text-white/72 transition hover:text-white"
               >
                 {secondaryButton}

@@ -3,17 +3,20 @@ import { BackFloat } from "@/components/BackFloat";
 import { getItemBySlug } from "@/lib/cms";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const item = await getItemBySlug(slug);
   if (!item || item.type !== "property") return {};
+  const en = (await cookies()).get("vork_lang")?.value === "en";
+  const path = `/properties/${slug}`;
   const description = item.summary || item.description || `Propiedad ${item.title} presentada por vork studio.`;
   return {
     title: item.title,
     description,
-    alternates: { canonical: `/properties/${slug}` },
-    openGraph: { title: `${item.title} | vork studio`, description, url: `/properties/${slug}`, images: item.cover_image ? [{ url: item.cover_image, alt: item.title }] : [] },
+    alternates: { canonical: en ? `/en${path}` : path, languages: { "es-CR": path, en: `/en${path}`, "x-default": path } },
+    openGraph: { title: `${item.title} | vork studio`, description, url: en ? `/en${path}` : path, images: item.cover_image ? [{ url: item.cover_image, alt: item.title }] : [] },
   };
 }
 

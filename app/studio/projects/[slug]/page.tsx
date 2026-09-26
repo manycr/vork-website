@@ -3,17 +3,20 @@ import { BackFloat } from "@/components/BackFloat";
 import { getItemBySlug, getPublishedItems } from "@/lib/cms";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const item = await getItemBySlug(slug);
   if (!item || item.type !== "project") return {};
+  const en = (await cookies()).get("vork_lang")?.value === "en";
+  const path = `/studio/projects/${slug}`;
   const description = item.summary || item.description || `Proyecto ${item.title} de vork studio.`;
   return {
     title: item.title,
     description,
-    alternates: { canonical: `/studio/projects/${slug}` },
-    openGraph: { title: `${item.title} | vork studio`, description, url: `/studio/projects/${slug}`, images: item.cover_image ? [{ url: item.cover_image, alt: item.title }] : [] },
+    alternates: { canonical: en ? `/en${path}` : path, languages: { "es-CR": path, en: `/en${path}`, "x-default": path } },
+    openGraph: { title: `${item.title} | vork studio`, description, url: en ? `/en${path}` : path, images: item.cover_image ? [{ url: item.cover_image, alt: item.title }] : [] },
   };
 }
 
@@ -21,6 +24,7 @@ export default async function Detail({ params }: { params: Promise<{ slug: strin
   const { slug } = await params;
   const item = await getItemBySlug(slug);
   if (!item || item.type !== "project") notFound();
+  const en = (await cookies()).get("vork_lang")?.value === "en";
 
   const projects = await getPublishedItems("project");
   const currentIndex = projects.findIndex((project) => project.slug === slug);
@@ -81,7 +85,7 @@ export default async function Detail({ params }: { params: Promise<{ slug: strin
         <section className="px-[7vw] pb-28 pt-6">
           <div className="mx-auto max-w-[1500px]">
             <p className="mb-5 text-[13px] lowercase text-neutral-400">siguiente proyecto</p>
-            <a href={`/studio/projects/${nextProject.slug}`} className="group block">
+            <a href={`${en ? "/en" : ""}/studio/projects/${nextProject.slug}`} className="group block">
               <div className="relative aspect-[16/7] overflow-hidden rounded-[24px]">
                 <img
                   src={nextProject.cover_image || ""}

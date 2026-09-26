@@ -1,20 +1,24 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [language, setLanguage] = useState<"es" | "en">("es");
+  const pathname = usePathname();
 
   useEffect(() => {
-    setLanguage(document.cookie.includes("vork_lang=en") ? "en" : "es");
-  }, []);
+    setLanguage(pathname === "/en" || pathname.startsWith("/en/") ? "en" : "es");
+  }, [pathname]);
 
   const changeLanguage = (next: "es" | "en") => {
-    document.cookie = `vork_lang=${next};path=/;max-age=31536000;samesite=lax`;
-    setLanguage(next);
-    window.location.reload();
+    const withoutEnglishPrefix = pathname === "/en" ? "/" : pathname.replace(/^\/en(?=\/)/, "");
+    const destination = next === "en"
+      ? `/en${withoutEnglishPrefix === "/" ? "" : withoutEnglishPrefix}`
+      : withoutEnglishPrefix;
+    window.location.assign(`${destination}${window.location.hash}`);
   };
 
   useEffect(() => {
@@ -33,6 +37,8 @@ export function Header() {
     return () => window.removeEventListener("keydown", closeOnEscape);
   }, [menuOpen]);
 
+  const prefix = language === "en" ? "/en" : "";
+  const localize = (href: string) => `${prefix}${href === "/" ? "" : href}` || "/";
   const links = [
     { href: "/studio", label: "studio" },
     { href: "/investments", label: language === "es" ? "inversiones" : "investments" },
@@ -51,13 +57,13 @@ export function Header() {
       }`}
     >
       <div className="mx-auto flex h-full max-w-[1800px] items-center justify-between gap-3 px-[7vw]">
-        <a href="/" className="shrink-0 text-[20px] font-semibold lowercase tracking-[-0.055em]">
+        <a href={localize("/")} className="shrink-0 text-[20px] font-semibold lowercase tracking-[-0.055em]">
           vork<span className="font-normal">studio</span>
         </a>
 
         <nav className="hidden items-center gap-8 text-[12px] font-medium lowercase lg:flex" aria-label={language === "es" ? "Navegación principal" : "Main navigation"}>
           {links.map((link) => (
-            <a key={link.href} href={link.href} className="transition-opacity hover:opacity-40">{link.label}</a>
+            <a key={link.href} href={localize(link.href)} className="transition-opacity hover:opacity-40">{link.label}</a>
           ))}
         </nav>
 
@@ -97,7 +103,7 @@ export function Header() {
         className={`${menuOpen ? "flex" : "hidden"} absolute inset-x-0 top-full max-h-[calc(100dvh-68px)] flex-col overflow-y-auto border-b border-black/10 bg-white/95 px-[7vw] py-5 shadow-[0_16px_32px_rgba(0,0,0,.07)] backdrop-blur-2xl lg:hidden`}
       >
         {links.map((link) => (
-          <a key={link.href} href={link.href} onClick={() => setMenuOpen(false)} className="border-b border-black/[0.07] py-4 text-[17px] font-medium lowercase tracking-[-.02em] last:border-b-0">
+          <a key={link.href} href={localize(link.href)} onClick={() => setMenuOpen(false)} className="border-b border-black/[0.07] py-4 text-[17px] font-medium lowercase tracking-[-.02em] last:border-b-0">
             {link.label}
           </a>
         ))}

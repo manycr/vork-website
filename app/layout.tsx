@@ -18,8 +18,11 @@ export async function generateMetadata(): Promise<Metadata> {
     metadataBase: siteUrl,
     title: { default: title, template: "%s | vork studio" },
     description,
-    alternates: { canonical: "/" },
-    openGraph: { title, description, url: siteUrl, siteName: "vork studio", type: "website" },
+    alternates: {
+      canonical: en ? "/en" : "/",
+      languages: { "es-CR": "/", "en": "/en", "x-default": "/" },
+    },
+    openGraph: { title, description, url: en ? "/en" : "/", siteName: "vork studio", type: "website", locale: en ? "en_US" : "es_CR" },
     twitter: { card: "summary", title, description },
   };
 }

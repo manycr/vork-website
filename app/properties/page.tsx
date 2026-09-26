@@ -31,7 +31,7 @@ export default async function PropertiesPage() {
               {properties.map((item: any) => (
                 <a
                   key={item.id || item.slug}
-                  href={`/properties/${item.slug}`}
+                  href={`${en ? "/en" : ""}/properties/${item.slug}`}
                   className="group block"
                 >
                   <div className="aspect-[4/3] overflow-hidden rounded-[22px] bg-neutral-100">
