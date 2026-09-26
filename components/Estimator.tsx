@@ -132,7 +132,7 @@ export function Estimator() {
                   ["airbnb", tr('un proyecto turístico o de renta', 'a tourism or rental project')],
                 ]}
               />
-              {error && <p className="mt-6 text-sm text-red-700">{error}</p>}
+              {error && <p role="alert" aria-live="assertive" className="mt-6 text-sm text-red-700">{error}</p>}
               <Actions onNext={next} nextLabel={tr("continuar", "continue")} />
             </Step>
           )}
@@ -195,7 +195,7 @@ export function Estimator() {
                   />
                 </Field>
               </div>
-              {error && <p className="mt-6 text-sm text-red-700">{error}</p>}
+              {error && <p role="alert" aria-live="assertive" className="mt-6 text-sm text-red-700">{error}</p>}
               <Actions onBack={back} onNext={next} nextLabel={tr("continuar", "continue")} backLabel={tr("← atrás", "← back")} />
             </Step>
           )}
@@ -243,7 +243,7 @@ export function Estimator() {
                   />
                 </Field>
               </div>
-              {error && <p className="mt-6 text-sm text-red-700">{error}</p>}
+              {error && <p role="alert" aria-live="assertive" className="mt-6 text-sm text-red-700">{error}</p>}
               <Actions onBack={back} onNext={next} nextLabel={tr("continuar", "continue")} backLabel={tr("← atrás", "← back")} />
             </Step>
           )}
@@ -273,7 +273,7 @@ export function Estimator() {
                 </Field>
               </div>
 
-              {error && <p className="mt-6 text-sm text-red-700">{error}</p>}
+              {error && <p role="alert" aria-live="assertive" className="mt-6 text-sm text-red-700">{error}</p>}
               <Actions onBack={back} onNext={submit} nextLabel={loading ? tr("preparando lectura...", "preparing assessment...") : tr("recibir mi lectura", "get my assessment")} backLabel={tr("← atrás", "← back")} disabled={loading} />
             </Step>
           )}

@@ -2,6 +2,20 @@ import { Header } from "@/components/Header";
 import { BackFloat } from "@/components/BackFloat";
 import { getItemBySlug, getPublishedItems } from "@/lib/cms";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const item = await getItemBySlug(slug);
+  if (!item || item.type !== "project") return {};
+  const description = item.summary || item.description || `Proyecto ${item.title} de vork studio.`;
+  return {
+    title: item.title,
+    description,
+    alternates: { canonical: `/studio/projects/${slug}` },
+    openGraph: { title: `${item.title} | vork studio`, description, url: `/studio/projects/${slug}`, images: item.cover_image ? [{ url: item.cover_image, alt: item.title }] : [] },
+  };
+}
 
 export default async function Detail({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -35,10 +49,10 @@ export default async function Detail({ params }: { params: Promise<{ slug: strin
       <section className="px-[7vw] py-20 md:py-28">
         <div className="mx-auto grid max-w-[1500px] gap-16 lg:grid-cols-[.65fr_1.35fr]">
           <div className="grid content-start gap-5">
-            <Info label="ubicación" value={item.location || "por definir"} />
-            <Info label="año" value={item.year || "por definir"} />
-            <Info label="área" value={item.area || "por definir"} />
-            <Info label="servicios" value={item.services?.join(" · ") || "por definir"} />
+            {item.location && <Info label="ubicación" value={item.location} />}
+            {item.year && <Info label="año" value={item.year} />}
+            {item.area && <Info label="área" value={item.area} />}
+            {item.services?.length ? <Info label="servicios" value={item.services.join(" · ")} /> : null}
           </div>
           <div>
             <h2 className="max-w-[900px] text-[clamp(2.8rem,5vw,5.7rem)] font-normal lowercase leading-[.93] tracking-[-0.055em]">
@@ -55,9 +69,9 @@ export default async function Detail({ params }: { params: Promise<{ slug: strin
 
       {(item.gallery || []).length > 0 && (
         <section className="grid grid-cols-1 gap-5 px-[7vw] pb-28 md:grid-cols-2">
-          {(item.gallery || []).map((image) => (
+          {(item.gallery || []).map((image, index) => (
             <div key={image} className="aspect-[4/3] overflow-hidden rounded-[22px] bg-neutral-100">
-              <img src={image} alt="" className="h-full w-full object-cover" />
+              <img src={image} alt={`${item.title}, imagen ${index + 1}`} className="h-full w-full object-cover" />
             </div>
           ))}
         </section>

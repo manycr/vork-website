@@ -36,34 +36,44 @@ export function Contact() {
           </a>
         </div>
 
-        <div className="pt-1">
+        <form className="pt-1" onSubmit={(event) => { event.preventDefault(); sendWhatsApp(); }}>
+          <label className="sr-only" htmlFor="contact-name">{en ? "name" : "nombre"}</label>
           <input
+            id="contact-name"
+            name="name"
             className="dark-field"
             placeholder={en ? "name" : "nombre"}
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
+          <label className="sr-only" htmlFor="contact-email">{en ? "email" : "correo"}</label>
           <input
+            id="contact-email"
+            name="email"
+            type="email"
+            autoComplete="email"
             className="dark-field"
             placeholder={en ? "email" : "correo"}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
+          <label className="sr-only" htmlFor="contact-project">{en ? "project" : "proyecto"}</label>
           <textarea
+            id="contact-project"
+            name="project"
             className="dark-field min-h-[120px] resize-none pt-5"
             placeholder={en ? "tell us briefly what you have in mind" : "cuéntanos brevemente qué quieres hacer"}
             value={project}
             onChange={(e) => setProject(e.target.value)}
           />
           <button
-            type="button"
-            onClick={sendWhatsApp}
+            type="submit"
             className="mt-7 inline-flex items-center gap-3 text-[13px] lowercase text-white transition hover:opacity-55"
           >
             <span className="text-xl">→</span>
             {en ? "send via whatsapp" : "enviar por whatsapp"}
           </button>
-        </div>
+        </form>
       </div>
     </section>
   );
