@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { usePathname } from "next/navigation";
 
 export function Contact() {
-  const [en, setEn] = useState(false);
-  useEffect(() => setEn(document.cookie.includes("vork_lang=en")), []);
+  const pathname = usePathname();
+  const en = pathname === "/en" || pathname.startsWith("/en/");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [project, setProject] = useState("");
@@ -13,7 +14,7 @@ export function Contact() {
     const text = encodeURIComponent(
       `${en ? "Hello" : "Hola"} VORK studio. ${en ? "My name is" : "Soy"} ${name || "—"}.\n${en ? "Email" : "Correo"}: ${email || "—"}\n${en ? "Project" : "Proyecto"}: ${project || "—"}`
     );
-    window.open(`https://wa.me/506?text=${text}`, "_blank");
+    window.open(`https://wa.me/50664644130?text=${text}`, "_blank", "noopener,noreferrer");
   }
 
   return (
