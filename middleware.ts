@@ -12,6 +12,30 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(redirected, 308);
   }
 
+  const directLegalRoutes = new Set([
+    "/privacidad",
+    "/eliminar-datos",
+    "/en/privacy",
+    "/en/data-deletion",
+  ]);
+
+  if (
+    directLegalRoutes.has(pathname) &&
+    request.cookies.get("vork_lang")?.value !== desiredLanguage
+  ) {
+    const rewritten = request.nextUrl.clone();
+    rewritten.pathname = isEnglish
+      ? pathname.slice(3) || "/"
+      : internalPathFromSpanish(pathname);
+    const response = NextResponse.rewrite(rewritten);
+    response.cookies.set("vork_lang", desiredLanguage, {
+      path: "/",
+      maxAge: 60 * 60 * 24 * 365,
+      sameSite: "lax",
+    });
+    return response;
+  }
+
   if (request.cookies.get("vork_lang")?.value !== desiredLanguage) {
     const response = NextResponse.redirect(request.nextUrl);
     response.cookies.set("vork_lang", desiredLanguage, {
