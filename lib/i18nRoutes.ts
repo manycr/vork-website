@@ -9,6 +9,7 @@ const spanishRoutes: Array<[string, string]> = [
   ["/build", "/construccion"],
   ["/about", "/nosotros"],
   ["/privacy", "/privacidad"],
+  ["/data-deletion", "/eliminar-datos"],
 ];
 
 export function localizePath(path: string, language: SiteLanguage): string {
