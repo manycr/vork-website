@@ -5,10 +5,15 @@ import { BackFloat } from "@/components/BackFloat";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "política de privacidad",
-  description: "Política de privacidad de vork studio.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const en = (await cookies()).get("vork_lang")?.value === "en";
+  return {
+    title: en ? "privacy policy" : "política de privacidad",
+    description: en
+      ? "Privacy policy for vork studio."
+      : "Política de privacidad de vork studio.",
+  };
+}
 
 const copy = {
   es: {
