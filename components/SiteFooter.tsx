@@ -6,13 +6,12 @@ import { localizePath } from "@/lib/i18nRoutes";
 
 const PRIVATE_PATHS = ["/vork-private", "/dashboard"];
 
-export function SiteFooter() {
+export function SiteFooter({ language }: { language: "es" | "en" }) {
   const pathname = usePathname();
   const hidden = PRIVATE_PATHS.some((path) => pathname === path || pathname.startsWith(`${path}/`));
 
   if (hidden) return null;
 
-  const language = pathname === "/en" || pathname.startsWith("/en/") ? "en" : "es";
   const localize = (href: string) => localizePath(href, language);
   const sectionLinks = [
     [language === "en" ? "home" : "inicio", localize("/")],
@@ -31,7 +30,7 @@ export function SiteFooter() {
 
   return (
     <footer className="bg-[#101010] text-white">
-      <Contact />
+      <Contact language={language} />
       <div className="border-t border-white/10 px-[7vw] py-10 md:py-14">
         <div className="mx-auto grid max-w-[1500px] gap-10 md:grid-cols-[1.2fr_1fr_1fr]">
           <div>
