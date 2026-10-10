@@ -46,7 +46,12 @@ export default async function AboutPage() {
       <p className="mb-8 text-xs lowercase tracking-[.12em] text-neutral-500">vork studio</p>
       <h1 className="max-w-[1150px] text-[clamp(3.8rem,9vw,9rem)] font-normal lowercase leading-[.9] tracking-[-.075em]">{t("title")}</h1>
       <h2 className="mt-16 max-w-[1000px] text-[clamp(2.4rem,5vw,5.5rem)] font-normal lowercase leading-[1.05] tracking-[-.06em]">{t("tagline")}</h2>
-      <div className="mt-20 grid gap-10 text-[clamp(1.05rem,1.55vw,1.4rem)] leading-[1.7] text-neutral-600 md:grid-cols-2 md:gap-20"><p>{t("intro")}<br/><br/>{t("context")}</p><p>{t("approach")}<br/><br/>{t("philosophy")}</p></div>
+      <div className="mt-20 max-w-[920px] space-y-8 text-[clamp(1.05rem,1.55vw,1.4rem)] leading-[1.7] text-neutral-600">
+        <p>{t("intro")}</p>
+        <p>{t("context")}</p>
+        <p>{t("approach")}</p>
+        <p>{t("philosophy")}</p>
+      </div>
       <p className="mt-24 max-w-[1000px] text-[clamp(2rem,4vw,4.5rem)] lowercase leading-[1.15] tracking-[-.055em]">{t("closing")}</p>
     </section>
     <section className="border-t border-black/10 px-[7vw] py-24"><div className="mx-auto max-w-[1500px]"><h2 className="mb-14 text-[clamp(2rem,4vw,4.5rem)] lowercase tracking-[-.055em]">{t("lines")}</h2><div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">{([ ["studio", "/studio"], ["build", "/build"], ["properties", "/properties"], ["investments", "/investments"] ] as const).map(([name,href]) => <a key={name} href={localizePath(href, lang)} className="border-t border-black/20 pt-5"><h3 className="text-2xl lowercase">{name === "build" ? (lang === "es" ? "construcción" : "construction") : name === "properties" ? (lang === "es" ? "propiedades" : "properties") : name === "investments" ? (lang === "es" ? "inversiones" : "investments") : name}</h3><p className="mt-4 text-sm leading-6 text-neutral-500">{t(name)}</p></a>)}</div></div></section>
