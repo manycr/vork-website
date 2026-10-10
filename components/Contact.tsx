@@ -1,11 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { usePathname } from "next/navigation";
 
-export function Contact() {
-  const pathname = usePathname();
-  const en = pathname === "/en" || pathname.startsWith("/en/");
+export function Contact({ language }: { language: "es" | "en" }) {
+  const en = language === "en";
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [project, setProject] = useState("");
