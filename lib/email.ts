@@ -12,7 +12,7 @@ function esc(value: unknown) {
 
 export async function sendLeadEmails(payload: EstimatorPayload, report: AIReport) {
   if (!process.env.RESEND_API_KEY || !process.env.RESEND_FROM_EMAIL) {
-    return { skipped: true };
+    return { skipped: true, clientSent: false, internalSent: false };
   }
 
   const resend = new Resend(process.env.RESEND_API_KEY);
@@ -49,17 +49,22 @@ export async function sendLeadEmails(payload: EstimatorPayload, report: AIReport
     </div>
   `;
 
-  await resend.emails.send({
+  const { error: clientError } = await resend.emails.send({
     from,
     to: payload.email,
-    subject: en ? "Your preliminary assessment | VORK studio" : "Tu lectura preliminar | VORK studio",
+    subject: en ? "Your preliminary assessment | vork studio" : "Tu lectura preliminar | vork studio",
     html: clientHtml,
   });
 
+  if (clientError) {
+    throw new Error(`No se pudo enviar la lectura al cliente: ${clientError.message}`);
+  }
+
+  let internalSent = false;
   if (internalEmail) {
     const internalHtml = `
       <div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;line-height:1.6;color:#111;max-width:760px">
-        <h1>Nuevo lead VORK ${esc(report.qualification)}</h1>
+        <h1>Nuevo lead vork ${esc(report.qualification)}</h1>
         <p><strong>Nombre:</strong> ${esc(payload.name)}</p>
         <p><strong>Email:</strong> ${esc(payload.email)}</p>
         <p><strong>WhatsApp:</strong> ${esc(payload.countryCode)} ${esc(payload.phone)}</p>
@@ -83,13 +88,18 @@ export async function sendLeadEmails(payload: EstimatorPayload, report: AIReport
         <ul>${report.commercialNotes.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>
       </div>
     `;
-    await resend.emails.send({
+    const { error: internalError } = await resend.emails.send({
       from,
       to: internalEmail,
-      subject: `Nuevo lead VORK ${report.qualification}: ${payload.name}`,
+      subject: `Nuevo lead vork ${report.qualification}: ${payload.name}`,
       html: internalHtml,
     });
+    if (internalError) {
+      console.error("No se pudo enviar la copia interna del lead:", internalError.message);
+    } else {
+      internalSent = true;
+    }
   }
 
-  return { skipped: false };
+  return { skipped: false, clientSent: true, internalSent };
 }

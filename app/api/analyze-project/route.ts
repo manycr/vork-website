@@ -15,6 +15,13 @@ export async function POST(request: Request) {
       );
     }
 
+    if (!payload.projectType || !payload.landStatus || !payload.zone) {
+      return NextResponse.json(
+        { error: "faltan datos esenciales del proyecto" },
+        { status: 400 }
+      );
+    }
+
     const report = await generateProjectReport(payload);
     const supabase = getSupabaseAdmin();
 
@@ -47,8 +54,10 @@ export async function POST(request: Request) {
       report,
     });
 
+    let emailSent = false;
     try {
-      await sendLeadEmails(payload, report);
+      const delivery = await sendLeadEmails(payload, report);
+      emailSent = delivery.clientSent;
     } catch (emailError) {
       console.error("No se pudo enviar el correo del lead:", emailError);
     }
@@ -66,7 +75,7 @@ export async function POST(request: Request) {
       visibleNextStep: report.visibleNextStep,
     };
 
-    return NextResponse.json({ report: publicReport, leadId: lead.id });
+    return NextResponse.json({ report: publicReport, leadId: lead.id, emailSent });
   } catch (error) {
     console.error(error);
     return NextResponse.json(

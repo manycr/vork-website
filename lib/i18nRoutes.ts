@@ -9,6 +9,7 @@ const spanishRoutes: Array<[string, string]> = [
   ["/build", "/construccion"],
   ["/about", "/nosotros"],
   ["/privacy", "/privacidad"],
+  ["/terms", "/terminos-y-condiciones"],
   ["/data-deletion", "/eliminar-datos"],
 ];
 

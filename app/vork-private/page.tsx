@@ -88,8 +88,8 @@ function ContentEditorSection({
   children: ReactNode;
 }) {
   return (
-    <section className="overflow-hidden rounded-[28px] border border-black/10 bg-white">
-      <div className="grid gap-4 border-b border-black/10 bg-[#fafafa] px-6 py-6 md:grid-cols-[70px_1fr] md:px-8">
+    <section className="border-t border-black/10 first:border-t-0">
+      <div className="grid gap-4 border-b border-black/10 px-6 py-6 md:grid-cols-[70px_1fr] md:px-8">
         <span className="text-xs font-black tracking-[0.08em] text-black/25">{number}</span>
         <div>
           <h3 className="text-2xl font-black lowercase tracking-[-0.045em]">{title}</h3>
@@ -1259,7 +1259,8 @@ async function enterDashboard() {
                   <p className="py-10 text-sm text-black/45">cargando contenido...</p>
                 ) : (
                   <div className="space-y-8">
-                    <div className="mb-7 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-black/10 bg-[#fafafa] p-4">
+                    <div className="overflow-hidden rounded-[28px] border border-black/10 bg-white">
+                    <div className="flex flex-wrap items-center justify-between gap-4 border-b border-black/10 px-6 py-5 md:px-8">
                         <div><p className="text-sm font-bold lowercase">idioma de edición</p><p className="mt-1 text-xs text-black/40">cada idioma tiene sus propios textos; las imágenes y tamaños son compartidos.</p></div>
                         <div className="inline-flex rounded-full border border-black/10 bg-white p-1" role="group" aria-label="idioma de edición">
                           {(["es", "en"] as const).map((lang) => <button key={lang} type="button" aria-pressed={editorLanguage === lang} onClick={() => setEditorLanguage(lang)} className={`rounded-full px-5 py-2 text-xs font-bold transition ${editorLanguage === lang ? "bg-black text-white" : "text-black/50 hover:text-black"}`}>{lang === "es" ? "español" : "english"}</button>)}
@@ -1397,7 +1398,7 @@ async function enterDashboard() {
                           ["propiedades", "properties_title", "properties_text"],
                           ["inversiones", "investments_card_title", "investments_text_card"],
                         ].map(([label, titleKey, textKey]) => (
-                          <div key={titleKey} className="rounded-2xl border border-black/10 bg-[#fafafa] p-5">
+                          <div key={titleKey} className="border-t border-black/10 pt-5">
                             <p className="mb-5 text-xs font-black lowercase tracking-[0.06em] text-black/35">{label}</p>
                             <CmsTextField
                               label="nombre"
@@ -1421,6 +1422,7 @@ async function enterDashboard() {
                         <CmsSizeControl label="tamaño descripciones" desktop={siteContent.ecosystem_text_desktop} mobile={siteContent.ecosystem_text_mobile} onDesktop={(value) => setSiteContent({ ...siteContent, ecosystem_text_desktop: value })} onMobile={(value) => setSiteContent({ ...siteContent, ecosystem_text_mobile: value })} />
                       </div>
                     </ContentEditorSection>
+                    </div>
 
                     {siteContentMessage && (
                       <p className="rounded-2xl border border-black/10 bg-white px-5 py-4 text-sm font-bold lowercase text-black/55">
@@ -1455,7 +1457,8 @@ async function enterDashboard() {
             {activeSection === "nosotros" && (
               <div className="space-y-8">
                 {siteContentLoading ? <p className="py-10 text-sm text-black/45">cargando contenido...</p> : <>
-                  <div className="mb-7 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-black/10 bg-[#fafafa] p-4">
+                  <div className="overflow-hidden rounded-[28px] border border-black/10 bg-white">
+                  <div className="flex flex-wrap items-center justify-between gap-4 border-b border-black/10 px-6 py-5 md:px-8">
                         <div><p className="text-sm font-bold lowercase">idioma de edición</p><p className="mt-1 text-xs text-black/40">cada idioma tiene sus propios textos; las imágenes y tamaños son compartidos.</p></div>
                         <div className="inline-flex rounded-full border border-black/10 bg-white p-1" role="group" aria-label="idioma de edición">
                           {(["es", "en"] as const).map((lang) => <button key={lang} type="button" aria-pressed={editorLanguage === lang} onClick={() => setEditorLanguage(lang)} className={`rounded-full px-5 py-2 text-xs font-bold transition ${editorLanguage === lang ? "bg-black text-white" : "text-black/50 hover:text-black"}`}>{lang === "es" ? "español" : "english"}</button>)}
@@ -1561,7 +1564,7 @@ async function enterDashboard() {
                       { title: "4. líneas de negocio", description: "título de la sección y descripción de cada línea.", fields: [["lines", "título de la sección"], ["studio", "studio"], ["build", "construcción"], ["properties", "propiedades"], ["investments", "inversiones"]] },
                       { title: "5. equipo y contacto", description: "título que aparece antes de las personas y llamada final.", fields: [["people", "título del equipo"], ["contact", "llamada de contacto"]] },
                     ] as const).map((group) => (
-                      <div key={group.title} className="rounded-2xl border border-black/10 bg-[#fafafa] p-5 md:p-6">
+                      <div key={group.title} className="border-t border-black/10 py-6 first:border-t-0 first:pt-0 last:pb-0">
                         <div className="mb-5 border-b border-black/10 pb-4">
                           <p className="text-sm font-black lowercase">{group.title}</p>
                           <p className="mt-1 text-xs leading-5 text-black/45">{group.description}</p>
@@ -1575,6 +1578,7 @@ async function enterDashboard() {
                       </div>
                     ))}
                   </ContentEditorSection>
+                  </div>
                   {siteContentMessage && <p role="status" className="rounded-2xl border border-black/10 bg-white px-5 py-4 text-sm font-bold lowercase text-black/55">{siteContentMessage}</p>}
                   <div className="sticky bottom-6 z-40 flex justify-end"><div className="flex items-center gap-3 rounded-full bg-white/90 p-1.5 shadow-[0_14px_45px_rgba(0,0,0,0.12)] backdrop-blur-xl">
                     <button type="button" onClick={() => setActiveSection("inicio")} className="rounded-full border border-black/10 bg-white px-6 py-3.5 text-xs font-bold lowercase text-black">← regresar</button>

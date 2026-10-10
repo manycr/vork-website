@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { localizePath } from "@/lib/i18nRoutes";
+import { ArrowIcon } from "@/components/ArrowIcon";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -64,8 +65,8 @@ export default async function Detail({ params }: { params: Promise<{ slug: strin
       </section>
 
       <section className="px-[7vw] py-20 md:py-28">
-        <div className="mx-auto grid max-w-[1500px] gap-16 lg:grid-cols-[.65fr_1.35fr]">
-          <div className="grid content-start gap-5">
+        <div className="mx-auto max-w-[1500px]">
+          <div className="grid max-w-[1100px] gap-5 sm:grid-cols-2 lg:grid-cols-5">
             {item.location && <Info label="ubicación" value={item.location} />}
             {item.area && <Info label="área" value={item.area} />}
             {item.year && <Info label="año" value={item.year} />}
@@ -75,7 +76,7 @@ export default async function Detail({ params }: { params: Promise<{ slug: strin
             ) : null}
           </div>
 
-          <div>
+          <div className="mt-14">
             <h2 className="max-w-[900px] text-[clamp(2.8rem,5vw,5.7rem)] font-normal lowercase leading-[.93] tracking-[-0.055em]">
               {item.concept || item.description}
             </h2>
@@ -118,8 +119,8 @@ export default async function Detail({ params }: { params: Promise<{ slug: strin
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
                 <div className="absolute inset-x-0 bottom-0 p-7 md:p-10">
-                  <h2 className="text-[clamp(2.8rem,5vw,5.8rem)] font-normal lowercase leading-[.9] tracking-[-0.06em] text-white">
-                    {nextInvestment.title} <span className="font-light">→</span>
+                  <h2 className="flex items-end justify-between gap-5 text-[clamp(2.8rem,5vw,5.8rem)] font-normal lowercase leading-[.9] tracking-[-0.06em] text-white">
+                    {nextInvestment.title} <ArrowIcon className="mb-2 h-8 w-8 shrink-0 transition-transform group-hover:translate-x-2 md:h-11 md:w-11" />
                   </h2>
                 </div>
               </div>
@@ -128,7 +129,7 @@ export default async function Detail({ params }: { params: Promise<{ slug: strin
         </section>
       )}
 
-      <BackFloat />
+      <BackFloat href={localizePath("/investments", en ? "en" : "es")} language={en ? "en" : "es"} />
     </main>
   );
 }

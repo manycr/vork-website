@@ -3,6 +3,7 @@ import { Header } from "@/components/Header";
 import { BackFloat } from "@/components/BackFloat";
 import { getPublishedItems } from "@/lib/cms";
 import { localizePath } from "@/lib/i18nRoutes";
+import { ArrowIcon } from "@/components/ArrowIcon";
 
 export default async function InvestmentsPage() {
   const items = await getPublishedItems("investment");
@@ -29,7 +30,7 @@ export default async function InvestmentsPage() {
 
       <section className="px-[7vw] pb-16 pt-28 md:pb-20 md:pt-32">
         <div className="mx-auto max-w-[1500px]">
-          <div className="grid gap-10 lg:grid-cols-[1.35fr_.65fr] lg:items-end">
+          <div className="max-w-[1100px]">
             <div>
               <h1 className="max-w-[1050px] text-[clamp(4rem,7.2vw,8rem)] font-normal lowercase leading-[.9] tracking-[-0.065em]">
                 {en
@@ -43,7 +44,7 @@ export default async function InvestmentsPage() {
               </p>
             </div>
 
-            <p className="max-w-md text-[16px] leading-7 text-neutral-500 lg:pb-2">
+            <p className="mt-5 max-w-2xl text-[16px] leading-7 text-neutral-500">
               {en
                 ? "for each opportunity, we assess feasibility, define the participation structure and coordinate the process from concept through operation."
                 : "para cada oportunidad, evaluamos la viabilidad, definimos la estructura de participación y coordinamos el proceso desde el concepto hasta la operación."}
@@ -102,8 +103,8 @@ export default async function InvestmentsPage() {
                       </p>
                     </div>
 
-                    <span className="mt-2 text-2xl font-light transition-transform duration-300 group-hover:translate-x-1">
-                      →
+                    <span className="mt-2 transition-transform duration-300 group-hover:translate-x-1">
+                      <ArrowIcon className="h-5 w-5" />
                     </span>
                   </div>
                 </a>
@@ -121,7 +122,7 @@ export default async function InvestmentsPage() {
         </div>
       </section>
 
-      <BackFloat />
+      <BackFloat href={localizePath("/", lang)} language={lang} />
     </main>
   );
 }

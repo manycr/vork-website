@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { ArrowIcon } from "@/components/ArrowIcon";
 
 type CMSItem = {
   id: string;
@@ -110,8 +111,8 @@ export default function CMSCarousel({
                   <h3 className="max-w-[760px] text-[clamp(2.2rem,4.4vw,4.8rem)] font-medium lowercase leading-[.92] tracking-[-0.06em]">
                     {item.title}
                   </h3>
-                  <p className="mt-4 text-[13px] font-medium lowercase text-white/85">
-                    {label} →
+                  <p className="mt-4 inline-flex items-center gap-2 text-[13px] font-medium lowercase text-white/85">
+                    {label} <ArrowIcon className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                   </p>
                 </div>
               </a>
@@ -125,18 +126,18 @@ export default function CMSCarousel({
               type="button"
               onClick={previous}
               aria-label="anterior"
-              className="absolute left-[3vw] top-1/2 z-30 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/95 text-xl text-black shadow-[0_8px_30px_rgba(0,0,0,.10)] backdrop-blur transition hover:scale-105 md:h-14 md:w-14"
+              className="group absolute left-[3vw] top-1/2 z-30 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-black/10 bg-white text-black shadow-[0_10px_32px_rgba(0,0,0,.16)] transition hover:scale-105 hover:bg-black hover:text-white md:h-14 md:w-14"
             >
-              ←
+              <ArrowIcon direction="left" className="h-5 w-5 transition-transform group-hover:-translate-x-0.5" />
             </button>
 
             <button
               type="button"
               onClick={next}
               aria-label="siguiente"
-              className="absolute right-[3vw] top-1/2 z-30 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/95 text-xl text-black shadow-[0_8px_30px_rgba(0,0,0,.10)] backdrop-blur transition hover:scale-105 md:h-14 md:w-14"
+              className="group absolute right-[3vw] top-1/2 z-30 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-black/10 bg-white text-black shadow-[0_10px_32px_rgba(0,0,0,.16)] transition hover:scale-105 hover:bg-black hover:text-white md:h-14 md:w-14"
             >
-              →
+              <ArrowIcon className="h-5 w-5 transition-transform group-hover:translate-x-0.5" />
             </button>
           </>
         )}

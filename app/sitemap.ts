@@ -5,7 +5,7 @@ import { localizePath } from "@/lib/i18nRoutes";
 const origin = "https://vorkstudio.com";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const staticRoutes = ["", "/about", "/studio", "/build", "/properties", "/investments", "/briefing"];
+  const staticRoutes = ["", "/about", "/studio", "/build", "/properties", "/investments", "/briefing", "/privacy", "/terms", "/data-deletion"];
   const entries: MetadataRoute.Sitemap = staticRoutes.flatMap((path) => {
     const internalPath = path || "/";
     const esPath = localizePath(internalPath, "es");

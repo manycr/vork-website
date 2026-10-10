@@ -79,6 +79,9 @@ export function estimate(payload: EstimatorPayload) {
 
   if (payload.service === "integral" || payload.service === "planos") score += 15;
   if (payload.zone === "turistica" || payload.zone === "costera") score += 10;
+  if (payload.landStatus === "propio") score += 5;
+  if (payload.landStatus === "compra") score += 3;
+  if (payload.landStatus === "sin_definir") score -= 5;
   if (payload.budget === "bajo" || payload.budget === "sin_definir") score -= 15;
 
   score = Math.max(0, Math.min(100, score));
