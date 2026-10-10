@@ -12,9 +12,15 @@ export function Contact() {
 
   function sendWhatsApp() {
     const text = encodeURIComponent(
-      `${en ? "Hello" : "Hola"} VORK studio. ${en ? "My name is" : "Soy"} ${name || "—"}.\n${en ? "Email" : "Correo"}: ${email || "—"}\n${en ? "Project" : "Proyecto"}: ${project || "—"}`
+      `${en ? "Hello" : "Hola"} vork studio. ${en ? "My name is" : "Soy"} ${name || "—"}.\n${en ? "Email" : "Correo"}: ${email || "—"}\n${en ? "Project" : "Proyecto"}: ${project || "—"}`
     );
     window.open(`https://wa.me/50664644130?text=${text}`, "_blank", "noopener,noreferrer");
+  }
+
+  function sendEmail() {
+    const subject = en ? "Project inquiry | vork studio" : "Consulta de proyecto | vork studio";
+    const body = `${en ? "Hello vork studio," : "Hola vork studio,"}\n\n${en ? "My name is" : "Soy"} ${name || "—"}.\n${en ? "Email" : "Correo"}: ${email || "—"}\n\n${en ? "Project" : "Proyecto"}:\n${project || "—"}`;
+    window.location.href = `mailto:info@vorkstudio.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   }
 
   return (
@@ -67,13 +73,23 @@ export function Contact() {
             value={project}
             onChange={(e) => setProject(e.target.value)}
           />
-          <button
-            type="submit"
-            className="mt-7 inline-flex items-center gap-3 text-[13px] lowercase text-white transition hover:opacity-55"
-          >
-            <span className="text-xl">→</span>
-            {en ? "send via whatsapp" : "enviar por whatsapp"}
-          </button>
+          <div className="mt-7 flex flex-wrap gap-x-8 gap-y-4">
+            <button
+              type="submit"
+              className="inline-flex items-center gap-3 text-[13px] lowercase text-white transition hover:opacity-55"
+            >
+              <span className="text-xl">→</span>
+              {en ? "send via whatsapp" : "enviar por whatsapp"}
+            </button>
+            <button
+              type="button"
+              onClick={sendEmail}
+              className="inline-flex items-center gap-3 text-[13px] lowercase text-white/65 transition hover:text-white"
+            >
+              <span className="text-xl">→</span>
+              {en ? "send via email" : "enviar por correo"}
+            </button>
+          </div>
         </form>
       </div>
     </section>

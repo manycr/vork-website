@@ -14,8 +14,10 @@ export function middleware(request: NextRequest) {
 
   const directLegalRoutes = new Set([
     "/privacidad",
+    "/terminos-y-condiciones",
     "/eliminar-datos",
     "/en/privacy",
+    "/en/terms",
     "/en/data-deletion",
   ]);
 

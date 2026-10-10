@@ -38,6 +38,7 @@ export function Estimator() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [report, setReport] = useState<Report | null>(null);
+  const [emailSent, setEmailSent] = useState(false);
   const [p, setP] = useState(initial);
 
   const update = (key: string, value: string | number) =>
@@ -93,6 +94,7 @@ export function Estimator() {
       }
 
       setReport(data.report);
+      setEmailSent(Boolean(data.emailSent));
       setStep(5);
     } catch {
       setError(tr("no pudimos conectar con el servidor.", "could not connect to the server."));
@@ -303,9 +305,18 @@ export function Estimator() {
                 <p className="mt-8 text-xs leading-5 text-neutral-400">
                   {tr("Esta lectura es preliminar. El costo definitivo requiere alcance, ubicación exacta, estudios y definición técnica del proyecto.", "This is a preliminary assessment. Final costs require a defined scope, exact location, studies and technical project definition.")}
                 </p>
-                <p className="mt-3 text-xs leading-5 text-neutral-400">
-                  {tr("También enviamos este resumen a", "We also sent this summary to")} {p.email}.
-                </p>
+                {emailSent ? (
+                  <p className="mt-3 text-xs leading-5 text-neutral-400">
+                    {tr("También enviamos este resumen a", "We also sent this summary to")} {p.email}.
+                  </p>
+                ) : (
+                  <p role="status" className="mt-3 text-xs leading-5 text-amber-700">
+                    {tr(
+                      "Tu lectura está lista, pero el correo no pudo enviarse. Escríbenos a info@vorkstudio.com para solicitarla.",
+                      "Your assessment is ready, but the email could not be delivered. Contact info@vorkstudio.com to request it."
+                    )}
+                  </p>
+                )}
               </div>
             </div>
           )}

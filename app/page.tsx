@@ -2,8 +2,6 @@ import { cookies } from "next/headers";
 import { Header } from "@/components/Header";
 import { HeroSlider } from "@/components/HeroSlider";
 import CMSCarousel from "@/components/CMSCarousel";
-import { Contact } from "@/components/Contact";
-import { WhatsAppFloat } from "@/components/WhatsAppFloat";
 import { Estimator } from "@/components/Estimator";
 import { getPublishedItems, getSiteContent } from "@/lib/cms";
 
@@ -134,10 +132,6 @@ export default async function Home() {
         </div>
       </section>
 
-      <footer className="bg-[#101010] text-white">
-        <Contact />
-      </footer>
-      <WhatsAppFloat />
     </main>
   );
 }
