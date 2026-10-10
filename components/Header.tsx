@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { localizePath } from "@/lib/i18nRoutes";
+import { internalPathFromSpanish, localizePath } from "@/lib/i18nRoutes";
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -50,6 +50,12 @@ export function Header() {
     { href: "/about", label: language === "es" ? "nosotros" : "about" },
     { href: "/#vork-ai", label: "vork ai" },
   ];
+  const routeWithoutLanguage = pathname.replace(/^\/en(?=\/|$)/, "") || "/";
+  const activePath = internalPathFromSpanish(routeWithoutLanguage);
+  const isActive = (href: string) => {
+    if (href.includes("#")) return false;
+    return activePath === href || activePath.startsWith(`${href}/`);
+  };
 
   return (
     <header
@@ -66,7 +72,14 @@ export function Header() {
 
         <nav className="hidden items-center gap-8 text-[12px] font-medium lowercase lg:flex" aria-label={language === "es" ? "Navegación principal" : "Main navigation"}>
           {links.map((link) => (
-            <a key={link.href} href={localize(link.href)} className="transition-opacity hover:opacity-40">{link.label}</a>
+            <a
+              key={link.href}
+              href={localize(link.href)}
+              aria-current={isActive(link.href) ? "page" : undefined}
+              className={`rounded-full px-3.5 py-2 transition duration-300 ${isActive(link.href) ? "bg-[#171717] font-semibold text-white shadow-[0_4px_16px_rgba(0,0,0,.12)]" : "hover:bg-black/[0.05]"}`}
+            >
+              {link.label}
+            </a>
           ))}
         </nav>
 
@@ -106,7 +119,7 @@ export function Header() {
         className={`${menuOpen ? "flex" : "hidden"} absolute inset-x-0 top-full max-h-[calc(100dvh-68px)] flex-col overflow-y-auto border-b border-black/10 bg-white/95 px-[7vw] py-5 shadow-[0_16px_32px_rgba(0,0,0,.07)] backdrop-blur-2xl lg:hidden`}
       >
         {links.map((link) => (
-          <a key={link.href} href={localize(link.href)} onClick={() => setMenuOpen(false)} className="border-b border-black/[0.07] py-4 text-[17px] font-medium lowercase tracking-[-.02em] last:border-b-0">
+          <a key={link.href} href={localize(link.href)} aria-current={isActive(link.href) ? "page" : undefined} onClick={() => setMenuOpen(false)} className={`border-b border-black/[0.07] py-4 text-[17px] lowercase tracking-[-.02em] last:border-b-0 ${isActive(link.href) ? "font-semibold text-black" : "font-medium text-black/65"}`}>
             {link.label}
           </a>
         ))}
