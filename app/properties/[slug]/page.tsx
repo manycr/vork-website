@@ -53,15 +53,15 @@ export default async function Detail({ params }: { params: Promise<{ slug: strin
       </section>
 
       <section className="px-[7vw] py-20 md:py-28">
-        <div className="mx-auto grid max-w-[1500px] gap-16 lg:grid-cols-[.65fr_1.35fr]">
-          <div className="grid content-start gap-5">
+        <div className="mx-auto max-w-[1500px]">
+          <div className="grid max-w-[900px] gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {item.location && <Info label="ubicación" value={item.location} />}
             {item.area && <Info label="área" value={item.area} />}
             {item.year && <Info label="año" value={item.year} />}
             {item.price && <Info label="precio" value={item.price} />}
           </div>
 
-          <div>
+          <div className="mt-14">
             <h2 className="max-w-[900px] text-[clamp(2.8rem,5vw,5.7rem)] font-normal lowercase leading-[.93] tracking-[-0.055em]">
               {item.concept || item.description || item.summary}
             </h2>
