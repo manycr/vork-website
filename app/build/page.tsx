@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { Header } from "@/components/Header";
 import { BackFloat } from "@/components/BackFloat";
+import { localizePath } from "@/lib/i18nRoutes";
 
 export default async function BuildPage() {
   const en = (await cookies()).get("vork_lang")?.value === "en";
@@ -31,7 +32,7 @@ export default async function BuildPage() {
         </div>
       </section>
 
-      <BackFloat />
+      <BackFloat href={localizePath("/", en ? "en" : "es")} language={en ? "en" : "es"} />
     </main>
   );
 }
