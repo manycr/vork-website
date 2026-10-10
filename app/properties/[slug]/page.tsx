@@ -26,6 +26,7 @@ export default async function Detail({ params }: { params: Promise<{ slug: strin
   const { slug } = await params;
   const item = await getItemBySlug(slug);
   if (!item || item.type !== "property") notFound();
+  const lang = (await cookies()).get("vork_lang")?.value === "en" ? "en" : "es";
 
   return (
     <main className="min-h-screen bg-white text-[#101010]">
@@ -78,7 +79,7 @@ export default async function Detail({ params }: { params: Promise<{ slug: strin
         </section>
       )}
 
-      <BackFloat />
+      <BackFloat href={localizePath("/properties", lang)} language={lang} />
     </main>
   );
 }
