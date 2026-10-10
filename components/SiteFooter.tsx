@@ -35,7 +35,7 @@ export function SiteFooter({ language }: { language: "es" | "en" }) {
       <SectionNavigator language={language} />
       <Contact language={language} />
       <div className="border-t border-white/10 px-[7vw] py-10 md:py-14">
-        <div className="mx-auto max-w-[1500px] space-y-12">
+        <div className="mx-auto grid max-w-[1500px] gap-10 md:grid-cols-[1.2fr_1fr_1fr] md:gap-12">
           <div>
             <a href={localize("/")} className="text-2xl font-semibold lowercase tracking-[-0.055em]">
               vork<span className="font-normal">studio</span>
@@ -59,7 +59,7 @@ export function SiteFooter({ language }: { language: "es" | "en" }) {
             <p className="mb-4 text-[11px] lowercase tracking-[.12em] text-white/35">
               {language === "en" ? "sections" : "secciones"}
             </p>
-            <div className="flex flex-wrap gap-x-7 gap-y-3 text-sm lowercase text-white/65">
+            <div className="grid gap-3 text-sm lowercase text-white/65">
               {sectionLinks.map(([label, href]) => (
                 <a key={href} href={href} className="transition hover:text-white">{label}</a>
               ))}
@@ -70,7 +70,7 @@ export function SiteFooter({ language }: { language: "es" | "en" }) {
             <p className="mb-4 text-[11px] lowercase tracking-[.12em] text-white/35">
               {language === "en" ? "legal" : "legal"}
             </p>
-            <div className="flex flex-wrap gap-x-7 gap-y-3 text-sm lowercase text-white/65">
+            <div className="grid gap-3 text-sm lowercase text-white/65">
               {legalLinks.map(([label, href]) => (
                 <a key={href} href={href} className="transition hover:text-white">{label}</a>
               ))}
