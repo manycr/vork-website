@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { localizePath } from "@/lib/i18nRoutes";
+import { ArrowIcon } from "@/components/ArrowIcon";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -96,8 +97,8 @@ export default async function Detail({ params }: { params: Promise<{ slug: strin
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
                 <div className="absolute inset-x-0 bottom-0 p-7 md:p-10">
-                  <h2 className="text-[clamp(2.8rem,5vw,5.8rem)] font-normal lowercase leading-[.9] tracking-[-0.06em] text-white">
-                    {nextProject.title} <span className="font-light">→</span>
+                  <h2 className="flex items-end justify-between gap-5 text-[clamp(2.8rem,5vw,5.8rem)] font-normal lowercase leading-[.9] tracking-[-0.06em] text-white">
+                    {nextProject.title} <ArrowIcon className="mb-2 h-8 w-8 shrink-0 transition-transform group-hover:translate-x-2 md:h-11 md:w-11" />
                   </h2>
                 </div>
               </div>
@@ -106,7 +107,7 @@ export default async function Detail({ params }: { params: Promise<{ slug: strin
         </section>
       )}
 
-      <BackFloat />
+      <BackFloat href={localizePath("/studio", en ? "en" : "es")} language={en ? "en" : "es"} />
     </main>
   );
 }
