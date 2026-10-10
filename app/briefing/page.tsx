@@ -16,11 +16,11 @@ export default async function BriefingPage() {
             <ArrowIcon direction="left" className="h-4 w-4 transition-transform group-hover:-translate-x-1" /> {en ? "back" : "volver"}
           </a>
 
-          <div className="mt-14 grid gap-8 lg:grid-cols-[1.2fr_.8fr] lg:items-end">
+          <div className="mt-14 max-w-[920px]">
             <h1 className="section-title max-w-[920px]">
               una entrada clara para iniciar tu proyecto.
             </h1>
-            <p className="section-copy max-w-xl lg:pb-2">
+            <p className="section-copy mt-6 max-w-xl">
               cuéntanos qué quieres hacer. organizamos la información para darte una primera lectura del proyecto.
             </p>
           </div>
