@@ -26,6 +26,7 @@ export type CMSItem = {
 export type EstimatorPayload = {
   language?: "es" | "en";
   projectType: string;
+  landStatus: string;
   zone: string;
   area: number;
   finish: string;
