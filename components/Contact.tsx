@@ -24,7 +24,7 @@ export function Contact({ language }: { language: "es" | "en" }) {
 
   return (
     <section id="contacto" className="px-[7vw] py-20 md:py-24">
-      <div className="mx-auto max-w-[1100px]">
+      <div className="mx-auto grid max-w-[1500px] gap-12 lg:grid-cols-[.9fr_1.1fr] lg:items-start lg:gap-20">
         <div>
           <h2 className="max-w-[920px] text-[clamp(3rem,6.2vw,6.6rem)] font-normal lowercase leading-[.92] tracking-[-0.06em]">
             {en ? "let’s talk about your project." : "hablemos de tu proyecto."}
@@ -34,7 +34,7 @@ export function Contact({ language }: { language: "es" | "en" }) {
           </p>
         </div>
 
-        <form className="mt-14 max-w-[900px]" onSubmit={(event) => { event.preventDefault(); sendWhatsApp(); }}>
+        <form className="lg:pt-2" onSubmit={(event) => { event.preventDefault(); sendWhatsApp(); }}>
           <label className="sr-only" htmlFor="contact-name">{en ? "name" : "nombre"}</label>
           <input
             id="contact-name"
