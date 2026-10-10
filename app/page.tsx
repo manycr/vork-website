@@ -79,9 +79,9 @@ export default async function Home() {
 
       <section id="vork-ai" className="px-[7vw] py-24 md:py-32">
         <div className="mx-auto max-w-[1500px]">
-          <div className="mb-20 grid gap-10 lg:grid-cols-[1.15fr_.85fr] lg:items-end">
+          <div className="mb-20 max-w-[900px]">
             <h2 className="section-title max-w-[850px]">{t("briefing_title")}</h2>
-            <p className="section-copy max-w-xl lg:pb-2">{t("briefing_text")}</p>
+            <p className="section-copy mt-6 max-w-xl">{t("briefing_text")}</p>
           </div>
           <Estimator />
         </div>
@@ -103,9 +103,9 @@ export default async function Home() {
 
       <section className="overflow-hidden px-[7vw] py-20 md:py-24">
         <div className="mx-auto max-w-[1500px]">
-          <div className="mb-10 grid items-end gap-6 lg:grid-cols-[1.25fr_.75fr]">
+          <div className="mb-10 max-w-[950px]">
             <h2 className="section-title max-w-[900px]">{t("investments_title")}</h2>
-            <p className="section-copy max-w-xl lg:pb-1">{t("investments_text")}</p>
+            <p className="section-copy mt-6 max-w-xl">{t("investments_text")}</p>
           </div>
           <CMSCarousel items={investments} label={lang === "en" ? "view opportunity" : "ver oportunidad"} />
         </div>
