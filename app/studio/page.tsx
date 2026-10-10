@@ -76,7 +76,7 @@ export default async function StudioPage() {
         </section>
       )}
 
-      <BackFloat />
+      <BackFloat href={localizePath("/", lang)} language={lang} />
     </main>
   );
 }
