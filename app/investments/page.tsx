@@ -3,6 +3,7 @@ import { Header } from "@/components/Header";
 import { BackFloat } from "@/components/BackFloat";
 import { getPublishedItems } from "@/lib/cms";
 import { localizePath } from "@/lib/i18nRoutes";
+import { ArrowIcon } from "@/components/ArrowIcon";
 
 export default async function InvestmentsPage() {
   const items = await getPublishedItems("investment");
@@ -102,8 +103,8 @@ export default async function InvestmentsPage() {
                       </p>
                     </div>
 
-                    <span className="mt-2 text-2xl font-light transition-transform duration-300 group-hover:translate-x-1">
-                      →
+                    <span className="mt-2 transition-transform duration-300 group-hover:translate-x-1">
+                      <ArrowIcon className="h-5 w-5" />
                     </span>
                   </div>
                 </a>
@@ -121,7 +122,7 @@ export default async function InvestmentsPage() {
         </div>
       </section>
 
-      <BackFloat />
+      <BackFloat href={localizePath("/", lang)} language={lang} />
     </main>
   );
 }
