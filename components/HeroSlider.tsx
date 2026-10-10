@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { ArrowIcon } from "@/components/ArrowIcon";
 
 type Props = {
   primaryButton: string;
@@ -97,9 +98,7 @@ export function HeroSlider({
                 href="#vork-ai"
                 className="group inline-flex items-center gap-3 text-[14px] lowercase"
               >
-                <span className="text-xl font-light transition-transform group-hover:translate-x-1">
-                  →
-                </span>
+                <ArrowIcon className="h-5 w-5 transition-transform group-hover:translate-x-1" />
                 {primaryButton}
               </a>
               <a
@@ -119,18 +118,18 @@ export function HeroSlider({
             type="button"
             aria-label={language === "en" ? "previous image" : "imagen anterior"}
             onClick={previous}
-            className="absolute left-4 top-1/2 z-20 -translate-y-1/2 text-3xl font-light text-white/55 transition hover:text-white md:left-7"
+            className="group absolute left-4 top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/25 bg-black/20 text-white shadow-[0_8px_28px_rgba(0,0,0,.18)] backdrop-blur-md transition hover:border-white/60 hover:bg-white hover:text-black md:left-7"
           >
-            ←
+            <ArrowIcon direction="left" className="h-5 w-5 transition-transform group-hover:-translate-x-0.5" />
           </button>
 
           <button
             type="button"
             aria-label={language === "en" ? "next image" : "imagen siguiente"}
             onClick={next}
-            className="absolute right-4 top-1/2 z-20 -translate-y-1/2 text-3xl font-light text-white/55 transition hover:text-white md:right-7"
+            className="group absolute right-4 top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/25 bg-black/20 text-white shadow-[0_8px_28px_rgba(0,0,0,.18)] backdrop-blur-md transition hover:border-white/60 hover:bg-white hover:text-black md:right-7"
           >
-            →
+            <ArrowIcon className="h-5 w-5 transition-transform group-hover:translate-x-0.5" />
           </button>
 
           <div className="absolute bottom-7 left-[7vw] z-20 flex items-center gap-2">
