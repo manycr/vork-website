@@ -2,6 +2,8 @@
 
 import { usePathname } from "next/navigation";
 import { Contact } from "@/components/Contact";
+import { ArrowIcon } from "@/components/ArrowIcon";
+import { SectionNavigator } from "@/components/SectionNavigator";
 import { localizePath } from "@/lib/i18nRoutes";
 
 const PRIVATE_PATHS = ["/vork-private", "/dashboard"];
@@ -30,9 +32,10 @@ export function SiteFooter({ language }: { language: "es" | "en" }) {
 
   return (
     <footer className="bg-[#101010] text-white">
+      <SectionNavigator language={language} />
       <Contact language={language} />
       <div className="border-t border-white/10 px-[7vw] py-10 md:py-14">
-        <div className="mx-auto grid max-w-[1500px] gap-10 md:grid-cols-[1.2fr_1fr_1fr]">
+        <div className="mx-auto max-w-[1500px] space-y-12">
           <div>
             <a href={localize("/")} className="text-2xl font-semibold lowercase tracking-[-0.055em]">
               vork<span className="font-normal">studio</span>
@@ -42,16 +45,21 @@ export function SiteFooter({ language }: { language: "es" | "en" }) {
                 ? "architecture, development, real estate and investment."
                 : "arquitectura, desarrollo, bienes raíces e inversión."}
             </p>
-            <a href="mailto:info@vorkstudio.com" className="mt-6 inline-block text-sm lowercase text-white/70 transition hover:text-white">
-              info@vorkstudio.com ↗
-            </a>
+            <div className="mt-6 grid gap-3 text-sm lowercase text-white/70">
+              <a href="mailto:info@vorkstudio.com" className="group inline-flex w-fit items-center gap-2 transition hover:text-white">
+                info@vorkstudio.com <ArrowIcon direction="up-right" className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+              </a>
+              <a href="https://www.instagram.com/vorkstudiocr/" target="_blank" rel="noreferrer" className="group inline-flex w-fit items-center gap-2 transition hover:text-white">
+                @vorkstudiocr <ArrowIcon direction="up-right" className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+              </a>
+            </div>
           </div>
 
           <nav aria-label={language === "en" ? "Site sections" : "Secciones del sitio"}>
             <p className="mb-4 text-[11px] lowercase tracking-[.12em] text-white/35">
               {language === "en" ? "sections" : "secciones"}
             </p>
-            <div className="grid grid-cols-2 gap-x-6 gap-y-3 text-sm lowercase text-white/65">
+            <div className="flex flex-wrap gap-x-7 gap-y-3 text-sm lowercase text-white/65">
               {sectionLinks.map(([label, href]) => (
                 <a key={href} href={href} className="transition hover:text-white">{label}</a>
               ))}
@@ -62,13 +70,10 @@ export function SiteFooter({ language }: { language: "es" | "en" }) {
             <p className="mb-4 text-[11px] lowercase tracking-[.12em] text-white/35">
               {language === "en" ? "legal" : "legal"}
             </p>
-            <div className="grid gap-3 text-sm lowercase text-white/65">
+            <div className="flex flex-wrap gap-x-7 gap-y-3 text-sm lowercase text-white/65">
               {legalLinks.map(([label, href]) => (
                 <a key={href} href={href} className="transition hover:text-white">{label}</a>
               ))}
-              <a href="https://www.instagram.com/vorkstudiocr/" target="_blank" rel="noreferrer" className="transition hover:text-white">
-                instagram ↗
-              </a>
             </div>
           </nav>
         </div>
