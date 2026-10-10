@@ -103,7 +103,7 @@ export default async function PropertiesPage() {
         </div>
       </section>
 
-      <BackFloat />
+      <BackFloat href={localizePath("/", lang)} language={lang} />
     </main>
   );
 }
