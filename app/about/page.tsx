@@ -44,7 +44,7 @@ export default async function AboutPage() {
     <Header />
     <section className="mx-auto max-w-[1500px] px-[7vw] pb-24 pt-40 md:pb-36">
       <p className="mb-8 text-xs lowercase tracking-[.12em] text-neutral-500">vork studio</p>
-      <h1 className="max-w-[1150px] text-[clamp(3.8rem,9vw,9rem)] font-normal lowercase leading-[.9] tracking-[-.075em]">{t("title")}</h1>
+      <h1 className="max-w-[1150px] text-[clamp(3.2rem,9vw,9rem)] font-normal lowercase leading-[.94] tracking-[-.075em] sm:leading-[.9]">{t("title")}</h1>
       <h2 className="mt-16 max-w-[1000px] text-[clamp(2.4rem,5vw,5.5rem)] font-normal lowercase leading-[1.05] tracking-[-.06em]">{t("tagline")}</h2>
       <div className="mt-20 max-w-[920px] space-y-8 text-[clamp(1.05rem,1.55vw,1.4rem)] leading-[1.7] text-neutral-600">
         <p>{t("intro")}</p>

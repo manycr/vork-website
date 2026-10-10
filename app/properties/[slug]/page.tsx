@@ -38,7 +38,7 @@ export default async function Detail({ params }: { params: Promise<{ slug: strin
       >
         <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/8 to-black/5" />
         <div className="relative z-10 mx-auto w-full max-w-[1500px]">
-          <h1 className="max-w-[1050px] text-[clamp(4.5rem,8vw,9rem)] font-normal lowercase leading-[.86] tracking-[-0.07em]">
+          <h1 className="max-w-[1050px] text-[clamp(3.35rem,8vw,9rem)] font-normal lowercase leading-[.92] tracking-[-0.07em] sm:leading-[.86]">
             {item.title}
           </h1>
           {item.price && (

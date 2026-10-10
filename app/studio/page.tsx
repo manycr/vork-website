@@ -19,7 +19,7 @@ export default async function StudioPage() {
 
       <section className="px-[7vw] pb-16 pt-28 md:pb-20 md:pt-32">
         <div className="mx-auto max-w-[1500px]">
-          <h1 className="max-w-[900px] text-[clamp(4.5rem,7.2vw,8rem)] font-normal lowercase leading-[.92] tracking-[-0.065em] text-balance">
+          <h1 className="max-w-[900px] text-[clamp(3.35rem,7.2vw,8rem)] font-normal lowercase leading-[.94] tracking-[-0.065em] text-balance sm:leading-[.92]">
             {en ? "projects and visualizations." : "proyectos y visualizaciones."}
           </h1>
           <p className="mt-6 max-w-xl text-[16px] leading-7 text-neutral-500">

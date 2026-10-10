@@ -39,6 +39,13 @@ p {
   text-wrap: balance;
 }
 
+@media (max-width: 639px) {
+  .section-title {
+    font-size: 2.8rem;
+    line-height: 0.98;
+  }
+}
+
 .section-copy {
   font-size: clamp(1rem, 1.15vw, 1.12rem);
   line-height: 1.6;
