@@ -36,8 +36,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang={lang}>
       <body>
         {children}
-        <SiteFooter />
-        <WhatsAppFloat />
+        <SiteFooter language={lang} />
+        <WhatsAppFloat language={lang} />
         {gaId && (
           <>
             <Script src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`} strategy="afterInteractive" />
