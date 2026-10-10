@@ -25,14 +25,14 @@ export default async function Detail({ params }: { params: Promise<{ slug: strin
       </section>
 
       <section className="px-[7vw] py-24">
-        <div className="grid gap-16 md:grid-cols-[0.45fr_1fr]">
-          <div className="space-y-5 text-sm">
+        <div>
+          <div className="grid max-w-[900px] gap-5 text-sm sm:grid-cols-2 lg:grid-cols-4">
             <Info label={lang === "en" ? "location" : "ubicación"} value={item.location || (lang === "en" ? "to be defined" : "por definir")} />
             <Info label={lang === "en" ? "year" : "año"} value={item.year || (lang === "en" ? "to be defined" : "por definir")} />
             <Info label={lang === "en" ? "area" : "área"} value={item.area || (lang === "en" ? "to be defined" : "por definir")} />
             <Info label={lang === "en" ? "services" : "servicios"} value={item.services?.join(", ") || (lang === "en" ? "to be defined" : "por definir")} />
           </div>
-          <div>
+          <div className="mt-14">
             <h2 className="text-5xl font-normal lowercase leading-[0.95] tracking-[-0.06em]">{item.concept || item.description}</h2>
             {item.investment_thesis && <p className="mt-8 max-w-2xl text-white/55">{item.investment_thesis}</p>}
           </div>
