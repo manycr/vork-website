@@ -4,12 +4,12 @@ import { usePathname } from "next/navigation";
 
 const WHATSAPP_NUMBER = "50664644130";
 
-export function WhatsAppFloat() {
+export function WhatsAppFloat({ language }: { language: "es" | "en" }) {
   const pathname = usePathname();
   if (pathname === "/vork-private" || pathname.startsWith("/vork-private/") || pathname === "/dashboard" || pathname.startsWith("/dashboard/")) {
     return null;
   }
-  const en = pathname === "/en" || pathname.startsWith("/en/");
+  const en = language === "en";
   const message = en
     ? "Hello, I would like information about vork studio's services."
     : "Hola, quiero información sobre los servicios de vork studio.";
