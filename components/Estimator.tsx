@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { ArrowIcon } from "@/components/ArrowIcon";
 
 type Report = {
   title: string;
@@ -17,6 +18,7 @@ type Report = {
 
 const initial = {
   projectType: "",
+  landStatus: "",
   zone: "",
   area: 120,
   finish: "",
@@ -52,7 +54,7 @@ export function Estimator() {
       return;
     }
 
-    if (step === 2 && (!p.zone || !p.finish || !p.budget || !p.area)) {
+    if (step === 2 && (!p.landStatus || !p.zone || !p.finish || !p.budget || !p.area)) {
       setError(tr('completa las opciones de esta etapa para continuar.', 'complete this step to continue.'));
       return;
     }
@@ -142,6 +144,20 @@ export function Estimator() {
           {step === 2 && (
             <Step title={tr('¿cómo imaginas el proyecto?', 'how do you envision your project?')} text={tr('Estos datos nos ayudan a entender escala, ubicación y nivel de inversión.', 'These details help us understand scale, location and investment level.')}>
               <div className="grid gap-x-10 gap-y-8 md:grid-cols-2">
+                <Field label={tr('situación del lote', 'land status')}>
+                  <SelectMenu
+                    value={p.landStatus}
+                    placeholder={tr('seleccionar situación', 'select status')}
+                    onChange={(value) => update("landStatus", value)}
+                    options={[
+                      ["propio", tr('ya tengo lote o propiedad', 'I already own land or property')],
+                      ["compra", tr('estoy en proceso de compra', 'I am in the process of buying')],
+                      ["busqueda", tr('estoy buscando lote', 'I am looking for land')],
+                      ["sin_definir", tr('todavía no lo he definido', 'I have not decided yet')],
+                    ]}
+                  />
+                </Field>
+
                 <Field label={tr('ubicación', 'location')}>
                   <SelectMenu
                     value={p.zone}
@@ -198,7 +214,7 @@ export function Estimator() {
                 </Field>
               </div>
               {error && <p role="alert" aria-live="assertive" className="mt-6 text-sm text-red-700">{error}</p>}
-              <Actions onBack={back} onNext={next} nextLabel={tr("continuar", "continue")} backLabel={tr("← atrás", "← back")} />
+              <Actions onBack={back} onNext={next} nextLabel={tr("continuar", "continue")} backLabel={tr("atrás", "back")} />
             </Step>
           )}
 
@@ -246,7 +262,7 @@ export function Estimator() {
                 </Field>
               </div>
               {error && <p role="alert" aria-live="assertive" className="mt-6 text-sm text-red-700">{error}</p>}
-              <Actions onBack={back} onNext={next} nextLabel={tr("continuar", "continue")} backLabel={tr("← atrás", "← back")} />
+              <Actions onBack={back} onNext={next} nextLabel={tr("continuar", "continue")} backLabel={tr("atrás", "back")} />
             </Step>
           )}
 
@@ -276,7 +292,7 @@ export function Estimator() {
               </div>
 
               {error && <p role="alert" aria-live="assertive" className="mt-6 text-sm text-red-700">{error}</p>}
-              <Actions onBack={back} onNext={submit} nextLabel={loading ? tr("preparando lectura...", "preparing assessment...") : tr("recibir mi lectura", "get my assessment")} backLabel={tr("← atrás", "← back")} disabled={loading} />
+              <Actions onBack={back} onNext={submit} nextLabel={loading ? tr("preparando lectura...", "preparing assessment...") : tr("recibir mi lectura", "get my assessment")} backLabel={tr("atrás", "back")} disabled={loading} />
             </Step>
           )}
 
@@ -389,11 +405,11 @@ function SelectMenu({
         <span>{selected?.[1] || placeholder}</span>
         <span
           aria-hidden="true"
-          className={`text-[13px] text-neutral-400 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          className={`text-neutral-400 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
             open ? "rotate-180" : ""
           }`}
         >
-          ↓
+          <ArrowIcon direction="down" className="h-4 w-4" />
         </span>
       </button>
 
@@ -439,18 +455,20 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   );
 }
 
-function Actions({ onBack, onNext, nextLabel = "continuar", backLabel = "← atrás", disabled = false }: { onBack?: () => void; onNext: () => void; nextLabel?: string; backLabel?: string; disabled?: boolean }) {
+function Actions({ onBack, onNext, nextLabel = "continuar", backLabel = "atrás", disabled = false }: { onBack?: () => void; onNext: () => void; nextLabel?: string; backLabel?: string; disabled?: boolean }) {
   return (
     <div className="mt-12 flex items-center justify-between gap-4">
       <div>
         {onBack && (
-          <button type="button" onClick={onBack} className="text-sm lowercase text-neutral-400 transition hover:text-black">
+          <button type="button" onClick={onBack} className="group inline-flex items-center gap-2 text-sm lowercase text-neutral-400 transition hover:text-black">
+            <ArrowIcon direction="left" className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
             {backLabel}
           </button>
         )}
       </div>
-      <button type="button" onClick={onNext} disabled={disabled} className="button disabled:cursor-wait disabled:opacity-50">
+      <button type="button" onClick={onNext} disabled={disabled} className="button group inline-flex items-center gap-3 disabled:cursor-wait disabled:opacity-50">
         {nextLabel}
+        {!disabled && <ArrowIcon className="h-4 w-4 transition-transform group-hover:translate-x-1" />}
       </button>
     </div>
   );
