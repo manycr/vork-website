@@ -88,7 +88,7 @@ export default async function DataDeletionPage() {
         <p className="mb-7 text-xs lowercase tracking-[.12em] text-neutral-500">
           {data.eyebrow}
         </p>
-        <h1 className="max-w-[1050px] text-[clamp(3.5rem,8vw,8rem)] font-normal lowercase leading-[.92] tracking-[-.07em]">
+        <h1 className="max-w-[1050px] text-[clamp(3rem,8vw,8rem)] font-normal lowercase leading-[.95] tracking-[-.07em] sm:leading-[.92]">
           {data.title}
         </h1>
         <p className="mt-14 max-w-[850px] text-[clamp(1.2rem,2vw,1.65rem)] leading-[1.55] text-neutral-700">

@@ -41,7 +41,7 @@ export default async function Detail({ params }: { params: Promise<{ slug: strin
 
       <section className="grid gap-6 px-[7vw] pb-32">
         {(item.gallery || []).map((image) => (
-          <div key={image} className="min-h-[680px] bg-cover bg-center" style={{ backgroundImage: `url('${image}')` }} />
+          <div key={image} className="min-h-[420px] bg-cover bg-center sm:min-h-[520px] md:min-h-[680px]" style={{ backgroundImage: `url('${image}')` }} />
         ))}
       </section>
 

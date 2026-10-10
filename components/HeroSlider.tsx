@@ -85,7 +85,7 @@ export function HeroSlider({
       <div className="relative z-10 mx-auto flex min-h-[100svh] max-w-[1800px] items-center px-[7vw] pb-20 pt-28">
         <div className="max-w-[900px] text-white">
           <div key={index} className="hero-copy-enter">
-            <h1 className="max-w-[880px] text-[clamp(4.25rem,7.1vw,8.2rem)] font-normal lowercase leading-[0.88] tracking-[-0.067em] text-balance">
+            <h1 className="max-w-[880px] text-[clamp(3.35rem,7.1vw,8.2rem)] font-normal lowercase leading-[0.9] tracking-[-0.067em] text-balance sm:leading-[0.88]">
               {slides[index].title}
             </h1>
 

@@ -31,7 +31,7 @@ export default async function PropertiesPage() {
         <div className="mx-auto max-w-[1500px]">
           <div className="max-w-[1050px]">
             <div>
-              <h1 className="max-w-[1000px] text-[clamp(4rem,7.2vw,8rem)] font-normal lowercase leading-[.92] tracking-[-0.065em]">
+              <h1 className="max-w-[1000px] text-[clamp(3.2rem,7.2vw,8rem)] font-normal lowercase leading-[.94] tracking-[-0.065em] sm:leading-[.92]">
                 {en
                   ? "properties with guidance from listing to closing."
                   : "propiedades con acompañamiento de principio a fin."}

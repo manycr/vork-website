@@ -1148,7 +1148,7 @@ async function enterDashboard() {
   return (
     <main className="min-h-screen bg-white text-[#101010]">
       <div className="grid min-h-screen lg:grid-cols-[280px_1fr]">
-        <aside className="border-b border-black/10 bg-[#111111] p-7 text-white lg:border-b-0 lg:border-r">
+        <aside className="border-b border-black/10 bg-[#111111] p-5 text-white lg:border-b-0 lg:border-r lg:p-7">
           <div className="lg:sticky lg:top-7">
             <a
               href="/"
@@ -1162,7 +1162,7 @@ async function enterDashboard() {
               administración
             </p>
 
-            <nav className="mt-12 space-y-1">
+            <nav className="mt-6 flex gap-2 overflow-x-auto pb-2 lg:mt-12 lg:block lg:space-y-1 lg:overflow-visible lg:pb-0">
               {sections.map((section) => {
                 const active = activeSection === section.id;
 
@@ -1171,14 +1171,14 @@ async function enterDashboard() {
                     key={section.id}
                     type="button"
                     onClick={() => setActiveSection(section.id)}
-                    className={`flex w-full items-center justify-between rounded-xl px-4 py-3 text-left text-sm lowercase transition ${
+                    className={`flex w-auto shrink-0 items-center justify-between rounded-full px-4 py-2.5 text-left text-sm lowercase transition lg:w-full lg:rounded-xl lg:py-3 ${
                       active
                         ? "bg-white text-black"
                         : "text-white/60 hover:bg-white/5 hover:text-white"
                     }`}
                   >
                     <span className="font-bold">{section.label}</span>
-                    <span className={active ? "text-black/35" : "text-white/25"}>
+                    <span className={`hidden lg:inline ${active ? "text-black/35" : "text-white/25"}`}>
                       →
                     </span>
                   </button>
@@ -1186,7 +1186,7 @@ async function enterDashboard() {
               })}
             </nav>
 
-            <div className="mt-12 border-t border-white/10 pt-6">
+            <div className="mt-5 border-t border-white/10 pt-5 lg:mt-12 lg:pt-6">
               <a
                 href="/"
                 className="text-xs font-bold lowercase text-white/45 hover:text-white"
