@@ -15,6 +15,13 @@ export async function POST(request: Request) {
       );
     }
 
+    if (!payload.projectType || !payload.landStatus || !payload.zone) {
+      return NextResponse.json(
+        { error: "faltan datos esenciales del proyecto" },
+        { status: 400 }
+      );
+    }
+
     const report = await generateProjectReport(payload);
     const supabase = getSupabaseAdmin();
 
