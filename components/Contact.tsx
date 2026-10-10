@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { ArrowIcon } from "@/components/ArrowIcon";
 
 export function Contact({ language }: { language: "es" | "en" }) {
   const en = language === "en";
@@ -23,25 +24,17 @@ export function Contact({ language }: { language: "es" | "en" }) {
 
   return (
     <section id="contacto" className="px-[7vw] py-20 md:py-24">
-      <div className="mx-auto grid max-w-[1500px] gap-14 lg:grid-cols-[.9fr_1.1fr]">
+      <div className="mx-auto max-w-[1100px]">
         <div>
-          <h2 className="max-w-[620px] text-[clamp(3rem,5vw,5.8rem)] font-normal lowercase leading-[.92] tracking-[-0.06em]">
+          <h2 className="max-w-[920px] text-[clamp(3rem,6.2vw,6.6rem)] font-normal lowercase leading-[.92] tracking-[-0.06em]">
             {en ? "let’s talk about your project." : "hablemos de tu proyecto."}
           </h2>
           <p className="mt-6 max-w-md text-[15px] leading-6 text-white/48">
             {en ? "architecture, visualization and development begin with a conversation." : "arquitectura, visualización y desarrollo desde una conversación inicial."}
           </p>
-          <a
-            href="https://www.instagram.com/vorkstudiocr/"
-            target="_blank"
-            rel="noreferrer"
-            className="mt-10 inline-block text-[13px] lowercase text-white/60 transition hover:text-white"
-          >
-            @vorkstudiocr ↗
-          </a>
         </div>
 
-        <form className="pt-1" onSubmit={(event) => { event.preventDefault(); sendWhatsApp(); }}>
+        <form className="mt-14 max-w-[900px]" onSubmit={(event) => { event.preventDefault(); sendWhatsApp(); }}>
           <label className="sr-only" htmlFor="contact-name">{en ? "name" : "nombre"}</label>
           <input
             id="contact-name"
@@ -74,17 +67,17 @@ export function Contact({ language }: { language: "es" | "en" }) {
           <div className="mt-7 flex flex-wrap gap-x-8 gap-y-4">
             <button
               type="submit"
-              className="inline-flex items-center gap-3 text-[13px] lowercase text-white transition hover:opacity-55"
+              className="group inline-flex items-center gap-3 text-[13px] lowercase text-white transition hover:opacity-55"
             >
-              <span className="text-xl">→</span>
+              <ArrowIcon className="h-5 w-5 transition-transform group-hover:translate-x-1" />
               {en ? "send via whatsapp" : "enviar por whatsapp"}
             </button>
             <button
               type="button"
               onClick={sendEmail}
-              className="inline-flex items-center gap-3 text-[13px] lowercase text-white/65 transition hover:text-white"
+              className="group inline-flex items-center gap-3 text-[13px] lowercase text-white/65 transition hover:text-white"
             >
-              <span className="text-xl">→</span>
+              <ArrowIcon className="h-5 w-5 transition-transform group-hover:translate-x-1" />
               {en ? "send via email" : "enviar por correo"}
             </button>
           </div>
